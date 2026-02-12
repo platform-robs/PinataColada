@@ -1555,8 +1555,8 @@ NOTA:
         <button class="x" id="closeCot" aria-label="Cerrar" type="button">×</button>
       </div>
 
-      <form id="cotForm">
-        <div class="success" id="successBox">
+      <form id="quoteForm">
+        <div class="success" id="successMsg">
           Muchas gracias por tu solicitud, nos pondremos en contacto contigo.
         </div>
 
@@ -1640,15 +1640,7 @@ NOTA:
   </div>
 
 <script>
-/*
-==========================================================
-PIÑATA COLADA — JS PRINCIPAL
-- Envío de formulario a Google Apps Script (doPost)
-- Limpia formulario al éxito
-- Cierra modal automáticamente
-- Mensaje de agradecimiento
-==========================================================
-*/
+
 
 /* ==========================================================
    1) CONFIGURACIÓN (EDITA SOLO ESTO)
@@ -1730,7 +1722,7 @@ if(menuBtn && mobileNav){
    4) BOTONES DE WHATSAPP (EDITA TU NÚMERO AQUÍ)
    ========================================================== */
 
-const WHATS_NUMBER = "5210000000000"; // <-- CAMBIA ESTO
+const WHATS_NUMBER = "5214465195882"; // <-- CAMBIA ESTO
 const WHATS_TEXT = encodeURIComponent("Hola 👋 Quiero una cotización para una piñata personalizada 🎉");
 
 function openWhats(){
@@ -1802,16 +1794,6 @@ fillTrack("trackRight");
    7) MODALES: Términos / Privacidad / Cotización
    ========================================================== */
 
-/**
- * OJO:
- * Para que esto funcione, tu HTML debe tener modales con:
- * - class="modal"
- * - id="modalCotizar" (o el nombre que uses)
- * - Un botón .x dentro para cerrar
- *
- * Si no los tienes todavía, te los armo en el siguiente mensaje.
- */
-
 // Botones que abren el modal de cotización
 [
   "btnCotizarTop",
@@ -1821,18 +1803,72 @@ fillTrack("trackRight");
   "btnCotizarMobile"
 ].forEach(id => {
   const el = document.getElementById(id);
-  if(el) el.addEventListener("click", () => openModal("modalCotizar"));
+  if(el) el.addEventListener("click", () => openModal("modalCot")); // ✅ CORREGIDO
 });
 
-// Legal
+
+// ===============================
+// MODAL LEGAL (1 solo modal)
+// ===============================
+
 const btnTerms = $("#btnTerms");
 const btnPrivacy = $("#btnPrivacy");
 
-if(btnTerms) btnTerms.addEventListener("click", () => openModal("modalLegal"));
-if(btnPrivacy) btnPrivacy.addEventListener("click", () => openModal("modalLegal"));
+const legalTitle = $("#legalTitle");
+const legalSubtitle = $("#legalSubtitle");
+const legalBody = $("#legalBody");
+
+const TERMS_HTML = `
+  <h4 style="margin:0 0 10px; color:#fff;">Términos y condiciones</h4>
+  <p>
+    Al solicitar una cotización en Piñata Colada, aceptas que la información enviada
+    se use únicamente para contactarte y dar seguimiento a tu pedido.
+  </p>
+  <p>
+    Los tiempos de entrega dependen de agenda y complejidad del diseño.
+    Los precios pueden variar según detalles, tamaño y urgencia.
+  </p>
+  <p>
+    Para confirmar pedido puede solicitarse anticipo.
+  </p>
+`;
+
+const PRIVACY_HTML = `
+  <h4 style="margin:0 0 10px; color:#fff;">Aviso de privacidad</h4>
+  <p>
+    La información proporcionada (nombre, teléfono y detalles del pedido)
+    será utilizada únicamente para fines de cotización y contacto.
+  </p>
+  <p>
+    No compartimos tu información con terceros.
+  </p>
+  <p>
+    Puedes solicitar la eliminación de tus datos en cualquier momento.
+  </p>
+`;
+
+if(btnTerms){
+  btnTerms.addEventListener("click", () => {
+    if(legalTitle) legalTitle.textContent = "Términos y condiciones";
+    if(legalSubtitle) legalSubtitle.textContent = "Lee esta información antes de solicitar.";
+    if(legalBody) legalBody.innerHTML = TERMS_HTML;
+    openModal("modalLegal");
+  });
+}
+
+if(btnPrivacy){
+  btnPrivacy.addEventListener("click", () => {
+    if(legalTitle) legalTitle.textContent = "Aviso de privacidad";
+    if(legalSubtitle) legalSubtitle.textContent = "Cómo usamos tu información.";
+    if(legalBody) legalBody.innerHTML = PRIVACY_HTML;
+    openModal("modalLegal");
+  });
+}
 
 
+// ===============================
 // Cierre por click afuera + botón X
+// ===============================
 document.querySelectorAll(".modal").forEach(modal => {
 
   // Click afuera
@@ -1865,29 +1901,20 @@ document.addEventListener("keydown", (e) => {
    8) FORMULARIO DE COTIZACIÓN (AQUÍ ESTÁ LA MAGIA)
    ========================================================== */
 
-/**
- * Requisitos:
- * - El formulario debe tener id="quoteForm"
- * - Debe existir un div con class="success" y id="successMsg"
- * - El botón submit debe ser id="sendBtn"
- */
-
-const quoteForm = $("#quoteForm");
-const successMsg = $("#successMsg");
-const submitBtn = $("#sendBtn"); // ✅ CORREGIDO
+const quoteForm = $("#cotForm");          // ✅ CORREGIDO
+const successMsg = $("#successBox");      // ✅ CORREGIDO
+const submitBtn = $("#sendBtn");
 
 if(quoteForm){
 
   quoteForm.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    // 1) Validación básica
     if(!APPS_SCRIPT_WEBAPP_URL){
       alert("⚠️ Falta configurar la URL del WebApp de Apps Script.");
       return;
     }
 
-    // 2) Obtener datos del form
     const formData = new FormData(quoteForm);
 
     const payload = {
@@ -1900,21 +1927,18 @@ if(quoteForm){
       detalles: formData.get("detalles")?.trim() || ""
     };
 
-    // 3) UX: bloquear botón mientras envía
     if(submitBtn){
       submitBtn.disabled = true;
       submitBtn.style.opacity = ".65";
       submitBtn.textContent = "Enviando…";
     }
 
-    // Ocultamos mensaje previo
     if(successMsg) successMsg.classList.remove("show");
 
     try{
-      // 4) Enviar a Apps Script (✅ CORREGIDO)
       const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json" }, // ✅ IMPORTANTE
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload)
       });
 
@@ -1924,7 +1948,6 @@ if(quoteForm){
         throw new Error(data.error || "Error desconocido");
       }
 
-      // 5) Mostrar éxito
       if(successMsg){
         successMsg.innerHTML = `
           ✅ ¡Gracias! Recibimos tu cotización.<br>
@@ -1934,25 +1957,17 @@ if(quoteForm){
         successMsg.classList.add("show");
       }
 
-      // 6) Limpia el formulario
       quoteForm.reset();
 
-      // 7) Cierra automáticamente el modal
       setTimeout(() => {
-        closeModal("modalCotizar");
-
-        // Reset visual
+        closeModal("modalCot");
         if(successMsg) successMsg.classList.remove("show");
-
       }, AUTO_CLOSE_MS);
 
     }catch(err){
-
       alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
 
     }finally{
-
-      // 8) Rehabilitar botón
       if(submitBtn){
         submitBtn.disabled = false;
         submitBtn.style.opacity = "";
