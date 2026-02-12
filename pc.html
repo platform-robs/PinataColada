@@ -774,7 +774,7 @@ NOTA:
 
     /*
     ==========================================================
-    9) FOOTER (FIX: ahora dark premium, no blanco)
+    9) FOOTER 
     ==========================================================
     */
     .site-footer{
@@ -793,11 +793,14 @@ NOTA:
       align-items:start;
     }
 
-    .footer-col{
-      display:flex;
-      flex-direction: column;
-      gap: 14px;
-    }
+.footer-col{
+  display:flex;
+  flex-direction: column;
+  gap: 14px;
+  align-items: center; /* ✅ centra todo en la columna */
+  text-align: center;  /* ✅ centra texto */
+}
+
 
     .footer-brand{
       display:flex;
@@ -816,11 +819,13 @@ NOTA:
       font-weight: 650;
     }
 
-    .footer-socials{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-    }
+.footer-socials{
+  display:flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center; /* ✅ centra el grupo */
+}
+
 
     /*
     Redes:
@@ -880,25 +885,27 @@ NOTA:
       margin-top: 6px;
     }
 
-    .footer-link{
-      width: 100%;
-      display:flex;
-      align-items:center;
-      gap: 10px;
-      padding: 12px 14px;
-      border-radius: 16px;
+.footer-link{
+  width: 100%;
+  display:flex;
+  align-items:center;
+  justify-content: center; /* ✅ centra el contenido */
+  gap: 10px;
+  padding: 12px 14px;
+  border-radius: 16px;
 
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
 
-      font-weight: 900;
-      color: #fff;
-      cursor: pointer;
+  font-weight: 900;
+  color: #fff;
+  cursor: pointer;
 
-      transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
-      text-align: center;
-      opacity: .92;
-    }
+  transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
+  opacity: .92;
+  text-align: center;
+}
+
 
     .footer-link:hover{
       opacity: 1;
@@ -910,12 +917,12 @@ NOTA:
       transform: translateY(0px) scale(.99);
     }
 
-    .link-ico{
-      width: 18px;
-      height: 18px;
-      fill: #fff;
-      flex: 0 0 auto;
-    }
+.footer-link::after{
+  content:"";
+  width: 18px;  /* mismo ancho del icono */
+  height: 18px;
+}
+
 
     /*
     ==========================================================
