@@ -1557,8 +1557,10 @@ NOTA:
 
       <form id="cotForm">
         <div class="success" id="successBox">
-          Muchas gracias por tu solicitud, nos pondremos en contacto contigo 💖
+          Muchas gracias por tu solicitud, nos pondremos en contacto contigo.
         </div>
+
+        
 
         <div class="form-grid">
           <label>
@@ -1867,11 +1869,12 @@ document.addEventListener("keydown", (e) => {
  * Requisitos:
  * - El formulario debe tener id="quoteForm"
  * - Debe existir un div con class="success" y id="successMsg"
+ * - El botón submit debe ser id="sendBtn"
  */
 
 const quoteForm = $("#quoteForm");
 const successMsg = $("#successMsg");
-const submitBtn = $("#btnSubmitQuote");
+const submitBtn = $("#sendBtn"); // ✅ CORREGIDO
 
 if(quoteForm){
 
@@ -1879,7 +1882,7 @@ if(quoteForm){
     e.preventDefault();
 
     // 1) Validación básica
-    if(!APPS_SCRIPT_WEBAPP_URL || APPS_SCRIPT_WEBAPP_URL.includes("PEGAR_AQUI")){
+    if(!APPS_SCRIPT_WEBAPP_URL){
       alert("⚠️ Falta configurar la URL del WebApp de Apps Script.");
       return;
     }
@@ -1908,10 +1911,10 @@ if(quoteForm){
     if(successMsg) successMsg.classList.remove("show");
 
     try{
-      // 4) Enviar a Apps Script
+      // 4) Enviar a Apps Script (✅ CORREGIDO)
       const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
         method: "POST",
-        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        headers: { "Content-Type": "application/json" }, // ✅ IMPORTANTE
         body: JSON.stringify(payload)
       });
 
@@ -1925,19 +1928,20 @@ if(quoteForm){
       if(successMsg){
         successMsg.innerHTML = `
           ✅ ¡Gracias! Recibimos tu cotización.<br>
-          <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span>
+          <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span><br>
+          <span style="opacity:.75">Nos pondremos en contacto contigo muy pronto.</span>
         `;
         successMsg.classList.add("show");
       }
 
-      // 6) LIMPIAR FORMULARIO (PROBLEMA #1 SOLUCIONADO)
+      // 6) Limpia el formulario
       quoteForm.reset();
 
-      // 7) CERRAR AUTOMÁTICAMENTE (PROBLEMA #1 SOLUCIONADO)
+      // 7) Cierra automáticamente el modal
       setTimeout(() => {
         closeModal("modalCotizar");
 
-        // Por si vuelve a abrirse: ocultamos el success
+        // Reset visual
         if(successMsg) successMsg.classList.remove("show");
 
       }, AUTO_CLOSE_MS);
@@ -1952,11 +1956,12 @@ if(quoteForm){
       if(submitBtn){
         submitBtn.disabled = false;
         submitBtn.style.opacity = "";
-        submitBtn.textContent = "Enviar cotización";
+        submitBtn.textContent = "Enviar solicitud";
       }
     }
   });
 }
+
 
 </script>
 
