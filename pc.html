@@ -1623,7 +1623,7 @@ NOTA:
   MODAL: Terms
   ==========================================================
   -->
-  <div class="modal" id="modalTerms">
+  <div class="modal" id="modalLegal">
     <div class="modal-card" role="dialog" aria-modal="true" aria-label="Contenido legal">
       <div class="modal-head">
         <div>
@@ -1828,8 +1828,8 @@ fillTrack("trackRight");
 const btnTerms = $("#btnTerms");
 const btnPrivacy = $("#btnPrivacy");
 
-if(btnTerms) btnTerms.addEventListener("click", () => openModal("modalTerms"));
-if(btnPrivacy) btnPrivacy.addEventListener("click", () => openModal("modalPrivacy"));
+if(btnTerms) btnTerms.addEventListener("click", () => openModal("modalLegal"));
+if(btnPrivacy) btnPrivacy.addEventListener("click", () => openModal("modalLegal"));
 
 
 // Cierre por click afuera + botón X
