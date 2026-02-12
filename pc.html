@@ -1637,322 +1637,329 @@ NOTA:
     </div>
   </div>
 
-  <script>
-    /*
-    ==========================================================
-    CONFIG (EDITA AQUÍ)
-    ==========================================================
-    */
+<script>
+/*
+==========================================================
+PIÑATA COLADA — JS PRINCIPAL
+- Envío de formulario a Google Apps Script (doPost)
+- Limpia formulario al éxito
+- Cierra modal automáticamente
+- Mensaje de agradecimiento
+==========================================================
+*/
 
-    // 1) WhatsApp del negocio
-    const WHATSAPP_NUMBER = "4465165882";
+/* ==========================================================
+   1) CONFIGURACIÓN (EDITA SOLO ESTO)
+   ========================================================== */
 
-    // 2) Web App URL de Google Apps Script
-    // Pega aquí tu URL (después de desplegar el script como Web App)
-    const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzOj5KzfFxfcJFhKZNgugX2tURCryVQOlTycPiNG58aeF18ZfL33ZhXZ4ht2v55HcXh/exec";
+/**
+ * 🔥 PEGA AQUÍ la URL del WebApp que te da Apps Script
+ * Ejemplo:
+ * https://script.google.com/macros/s/AKfycbxxxxxxx/exec
+ */
+const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzOj5KzfFxfcJFhKZNgugX2tURCryVQOlTycPiNG58aeF18ZfL33ZhXZ4ht2v55HcXh/exec";
 
-    // 3) Textos legales (editables)
-    const TERMS_HTML = `
-      <p><b>Términos y condiciones</b></p>
-      <p>Las cotizaciones están sujetas a disponibilidad de agenda, complejidad del diseño y fecha solicitada.</p>
-      <p>Para confirmar pedidos puede requerirse anticipo. Cambios de último momento pueden modificar el precio.</p>
-      <p>Las imágenes son ilustrativas. Se respetan referencias, pero pueden existir variaciones artesanales.</p>
-    `;
+/**
+ * Tiempo (ms) para cerrar el modal después del mensaje de éxito
+ * 2500 = 2.5 segundos
+ */
+const AUTO_CLOSE_MS = 2500;
 
-    const PRIVACY_HTML = `
-      <p><b>Aviso de privacidad</b></p>
-      <p>La información enviada se utiliza únicamente para responder tu solicitud de cotización.</p>
-      <p>No compartimos tus datos con terceros. Puedes solicitar la eliminación de tu información en cualquier momento.</p>
-    `;
 
-    /*
-    ==========================================================
-    HELPERS
-    ==========================================================
-    */
-    const $ = (q, el=document) => el.querySelector(q);
-    const $$ = (q, el=document) => Array.from(el.querySelectorAll(q));
+/* ==========================================================
+   2) HELPERS (funciones pequeñas)
+   ========================================================== */
 
-    function formatDateISOToMX(iso){
-      if(!iso) return "";
-      const [y,m,d] = iso.split("-");
-      return `${d}/${m}/${y}`;
-    }
+/** Selección rápida */
+const $ = (sel) => document.querySelector(sel);
 
-    function openWhatsApp(message){
-      const text = encodeURIComponent(message);
-      const url = `https://wa.me/52${WHATSAPP_NUMBER}?text=${text}`;
-      window.open(url, "_blank", "noopener");
-    }
+/** Año automático en footer */
+$("#year").textContent = new Date().getFullYear();
 
-    /*
-    ==========================================================
-    MODALES (mejorados)
-    - Scroll lock real
-    - Guardamos foco para devolverlo
-    ==========================================================
-    */
-    let lastFocusedEl = null;
+/** Scroll lock cuando se abre un modal */
+function lockScroll(lock){
+  document.body.style.overflow = lock ? "hidden" : "";
+}
 
-    function openModal(id){
-      const m = $(id);
-      if(!m) return;
+/** Abre un modal por ID */
+function openModal(modalId){
+  const modal = document.getElementById(modalId);
+  if(!modal) return;
+  modal.classList.add("open");
+  lockScroll(true);
+}
 
-      lastFocusedEl = document.activeElement;
+/** Cierra un modal por ID */
+function closeModal(modalId){
+  const modal = document.getElementById(modalId);
+  if(!modal) return;
+  modal.classList.remove("open");
+  lockScroll(false);
+}
 
-      m.classList.add("open");
-      document.body.style.overflow = "hidden";
+/** Cierra todos los modales */
+function closeAllModals(){
+  document.querySelectorAll(".modal.open").forEach(m => m.classList.remove("open"));
+  lockScroll(false);
+}
 
-      // Enfocamos el primer input si existe (UX pro)
-      const firstInput = m.querySelector("input, select, textarea, button");
-      if(firstInput) firstInput.focus();
-    }
 
-    function closeModal(id){
-      const m = $(id);
-      if(!m) return;
+/* ==========================================================
+   3) MENÚ MÓVIL (hamburguesa)
+   ========================================================== */
 
-      m.classList.remove("open");
-      document.body.style.overflow = "";
+const menuBtn = $("#menuBtn");
+const mobileNav = $("#mobileNav");
 
-      // Devolvemos el foco al elemento que abrió el modal
-      if(lastFocusedEl && typeof lastFocusedEl.focus === "function"){
-        lastFocusedEl.focus();
-      }
-    }
+if(menuBtn && mobileNav){
+  menuBtn.addEventListener("click", () => {
+    mobileNav.classList.toggle("open");
+    menuBtn.setAttribute("aria-label", mobileNav.classList.contains("open") ? "Cerrar menú" : "Abrir menú");
+  });
 
-    /*
-    ==========================================================
-    UI INIT
-    ==========================================================
-    */
+  // Cierra el menú al dar click a un link
+  mobileNav.querySelectorAll("a").forEach(a => {
+    a.addEventListener("click", () => mobileNav.classList.remove("open"));
+  });
+}
 
-    // Year
-    $("#year").textContent = new Date().getFullYear();
 
-    /*
-    ------------------------------
-    Toggle cards (precios)
-    ------------------------------
-    */
-    $$(".card").forEach(card => {
-      const toggle = card.querySelector(".toggle");
-      const plus = toggle.querySelector("div:last-child");
+/* ==========================================================
+   4) BOTONES DE WHATSAPP (EDITA TU NÚMERO AQUÍ)
+   ========================================================== */
 
-      const setState = (open) => {
-        card.classList.toggle("open", open);
-        plus.textContent = open ? "−" : "＋";
-      };
+const WHATS_NUMBER = "5210000000000"; // <-- CAMBIA ESTO
+const WHATS_TEXT = encodeURIComponent("Hola 👋 Quiero una cotización para una piñata personalizada 🎉");
 
-      toggle.addEventListener("click", () => setState(!card.classList.contains("open")));
+function openWhats(){
+  window.open(`https://wa.me/${WHATS_NUMBER}?text=${WHATS_TEXT}`, "_blank");
+}
 
-      // Accesibilidad: Enter / Space
-      toggle.addEventListener("keydown", (e) => {
-        if(e.key === "Enter" || e.key === " "){
-          e.preventDefault();
-          setState(!card.classList.contains("open"));
-        }
-      });
-    });
+["btnWhats", "btnWhats2", "btnWhatsMobile"].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener("click", openWhats);
+});
 
-    /*
-    ------------------------------
-    Galería (marquee)
-    ------------------------------
-    */
-    const left = $("#trackLeft");
-    const right = $("#trackRight");
 
-    const shots = [
-      "Unicornio", "Mario", "Spiderman", "Frozen", "Barbie", "Stitch",
-      "Pokémon", "Minnie", "Sonic", "Dragon Ball", "Kuromi", "Among Us"
-    ];
+/* ==========================================================
+   5) TOGGLES DE TAMAÑOS (cards de precios)
+   ========================================================== */
 
-    function buildMarquee(track){
-      // Duplicamos para scroll infinito real
-      const items = [...shots, ...shots];
-      track.innerHTML = items.map(t => `<div class="shot"><span>${t}</span></div>`).join("");
-    }
+document.querySelectorAll(".card").forEach(card => {
+  const toggle = card.querySelector(".toggle");
+  if(!toggle) return;
 
-    buildMarquee(left);
-    buildMarquee(right);
+  const toggleOpen = () => card.classList.toggle("open");
 
-    /*
-    ------------------------------
-    CTA buttons (abrir modal cotización)
-    ------------------------------
-    */
-    ["#btnCotizarTop", "#btnCotizarHero", "#btnCotizarMid", "#btnCotizarBottom", "#btnCotizarMobile"].forEach(id => {
-      const el = $(id);
-      if(el) el.addEventListener("click", () => openModal("#modalCot"));
-    });
+  toggle.addEventListener("click", toggleOpen);
 
-    /*
-    ------------------------------
-    WhatsApp buttons
-    ------------------------------
-    */
-    function waInfo(){
-      openWhatsApp("Hola 😊 Me gustaría información sobre piñatas personalizadas.");
-    }
-
-    function waCotizar(){
-      openWhatsApp("Hola 😊 Me gustaría cotizar una piñata.");
-    }
-
-    $("#btnWhats").addEventListener("click", waInfo);
-    $("#btnWhats2").addEventListener("click", waCotizar);
-    $("#btnWhatsMobile").addEventListener("click", waInfo);
-
-    /*
-    ------------------------------
-    Modal legal
-    ------------------------------
-    */
-    function openLegal(title, subtitle, html){
-      $("#legalTitle").textContent = title;
-      $("#legalSubtitle").textContent = subtitle;
-      $("#legalBody").innerHTML = html;
-      openModal("#modalLegal");
-    }
-
-    $("#btnTerms").addEventListener("click", (e) => {
+  // Accesibilidad: Enter / Space
+  toggle.addEventListener("keydown", (e) => {
+    if(e.key === "Enter" || e.key === " "){
       e.preventDefault();
-      openLegal("Términos y condiciones", "Información sobre pedidos y cotizaciones.", TERMS_HTML);
+      toggleOpen();
+    }
+  });
+});
+
+
+/* ==========================================================
+   6) GALERÍA (placeholders de ejemplo)
+   ========================================================== */
+
+const demoShots = [
+  "Unicornio",
+  "Spiderman",
+  "Hello Kitty",
+  "Mario",
+  "Barbie",
+  "Paw Patrol",
+  "Goku",
+  "Sonic",
+  "Frozen",
+  "BTS"
+];
+
+function fillTrack(trackId){
+  const track = document.getElementById(trackId);
+  if(!track) return;
+
+  // Duplicamos para que el marquee sea infinito
+  const items = [...demoShots, ...demoShots];
+
+  track.innerHTML = items.map(txt => `
+    <div class="shot"><span>${txt}</span></div>
+  `).join("");
+}
+
+fillTrack("trackLeft");
+fillTrack("trackRight");
+
+
+/* ==========================================================
+   7) MODALES: Términos / Privacidad / Cotización
+   ========================================================== */
+
+/**
+ * OJO:
+ * Para que esto funcione, tu HTML debe tener modales con:
+ * - class="modal"
+ * - id="modalCotizar" (o el nombre que uses)
+ * - Un botón .x dentro para cerrar
+ *
+ * Si no los tienes todavía, te los armo en el siguiente mensaje.
+ */
+
+// Botones que abren el modal de cotización
+[
+  "btnCotizarTop",
+  "btnCotizarHero",
+  "btnCotizarMid",
+  "btnCotizarBottom",
+  "btnCotizarMobile"
+].forEach(id => {
+  const el = document.getElementById(id);
+  if(el) el.addEventListener("click", () => openModal("modalCotizar"));
+});
+
+// Legal
+const btnTerms = $("#btnTerms");
+const btnPrivacy = $("#btnPrivacy");
+
+if(btnTerms) btnTerms.addEventListener("click", () => openModal("modalTerms"));
+if(btnPrivacy) btnPrivacy.addEventListener("click", () => openModal("modalPrivacy"));
+
+
+// Cierre por click afuera + botón X
+document.querySelectorAll(".modal").forEach(modal => {
+
+  // Click afuera
+  modal.addEventListener("click", (e) => {
+    if(e.target === modal){
+      modal.classList.remove("open");
+      lockScroll(false);
+    }
+  });
+
+  // Botón X
+  const x = modal.querySelector(".x");
+  if(x){
+    x.addEventListener("click", () => {
+      modal.classList.remove("open");
+      lockScroll(false);
     });
+  }
+});
 
-    $("#btnPrivacy").addEventListener("click", (e) => {
-      e.preventDefault();
-      openLegal("Aviso de privacidad", "Cómo usamos tu información.", PRIVACY_HTML);
-    });
+// Cierre con tecla ESC
+document.addEventListener("keydown", (e) => {
+  if(e.key === "Escape"){
+    closeAllModals();
+  }
+});
 
-    /*
-    ------------------------------
-    Cerrar modales
-    ------------------------------
-    */
-    $("#closeCot").addEventListener("click", () => closeModal("#modalCot"));
-    $("#closeLegal").addEventListener("click", () => closeModal("#modalLegal"));
 
-    // Cerrar clic afuera
-    ["#modalCot", "#modalLegal"].forEach(id => {
-      $(id).addEventListener("click", (e) => {
-        if(e.target === $(id)) closeModal(id);
-      });
-    });
+/* ==========================================================
+   8) FORMULARIO DE COTIZACIÓN (AQUÍ ESTÁ LA MAGIA)
+   ========================================================== */
 
-    // Cerrar ESC
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape"){
-        closeModal("#modalCot");
-        closeModal("#modalLegal");
-      }
-    });
+/**
+ * Requisitos:
+ * - El formulario debe tener id="quoteForm"
+ * - Debe existir un div con class="success" y id="successMsg"
+ */
 
-    /*
-    ==========================================================
-    MENÚ MÓVIL
-    ==========================================================
-    */
-    const menuBtn = $("#menuBtn");
-    const mobileNav = $("#mobileNav");
+const quoteForm = $("#quoteForm");
+const successMsg = $("#successMsg");
+const submitBtn = $("#btnSubmitQuote");
 
-    function toggleMobileMenu(){
-      const isOpen = mobileNav.classList.contains("open");
-      mobileNav.classList.toggle("open", !isOpen);
+if(quoteForm){
 
-      // Cambia aria-label para accesibilidad
-      menuBtn.setAttribute("aria-label", isOpen ? "Abrir menú" : "Cerrar menú");
+  quoteForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+
+    // 1) Validación básica
+    if(!APPS_SCRIPT_WEBAPP_URL || APPS_SCRIPT_WEBAPP_URL.includes("PEGAR_AQUI")){
+      alert("⚠️ Falta configurar la URL del WebApp de Apps Script.");
+      return;
     }
 
-    menuBtn.addEventListener("click", toggleMobileMenu);
+    // 2) Obtener datos del form
+    const formData = new FormData(quoteForm);
 
-    // Cuando el usuario toca un link del menú móvil, lo cerramos
-    $$("#mobileNav a").forEach(a => {
-      a.addEventListener("click", () => {
-        mobileNav.classList.remove("open");
-        menuBtn.setAttribute("aria-label", "Abrir menú");
+    const payload = {
+      nombre: formData.get("nombre")?.trim() || "",
+      tamano: formData.get("tamano") || "",
+      tema: formData.get("tema")?.trim() || "",
+      fecha: formData.get("fecha") || "",
+      evento: formData.get("evento") || "",
+      telefono: formData.get("telefono")?.trim() || "",
+      detalles: formData.get("detalles")?.trim() || ""
+    };
+
+    // 3) UX: bloquear botón mientras envía
+    if(submitBtn){
+      submitBtn.disabled = true;
+      submitBtn.style.opacity = ".65";
+      submitBtn.textContent = "Enviando…";
+    }
+
+    // Ocultamos mensaje previo
+    if(successMsg) successMsg.classList.remove("show");
+
+    try{
+      // 4) Enviar a Apps Script
+      const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
+        method: "POST",
+        headers: { "Content-Type": "text/plain;charset=utf-8" },
+        body: JSON.stringify(payload)
       });
-    });
 
-    /*
-    ==========================================================
-    SUBMIT: Google Sheets + WhatsApp
-    ==========================================================
-    */
-    const form = $("#cotForm");
-    const sendBtn = $("#sendBtn");
-    const successBox = $("#successBox");
+      const data = await res.json();
 
-    form.addEventListener("submit", async (e) => {
-      e.preventDefault();
-
-      successBox.classList.remove("show");
-
-      // Tomamos datos del form
-      const data = Object.fromEntries(new FormData(form).entries());
-
-      // Mensaje WhatsApp
-      const waMsg =
-`Hola 👋 Soy ${data.nombre}.
-
-Quiero cotizar una piñata:
-• Tamaño: ${data.tamano}
-• Tema: ${data.tema}
-• Fecha: ${formatDateISOToMX(data.fecha)}
-• Evento: ${data.evento}
-• Teléfono: ${data.telefono || "(no indicado)"}
-• Detalles: ${data.detalles || "(sin detalles extra)"}
-
-¿Me ayudan por favor? 💖`;
-
-      // UI lock
-      sendBtn.disabled = true;
-      sendBtn.style.opacity = .75;
-      sendBtn.textContent = "Enviando…";
-
-      // 1) Guardar en Google Sheets (si hay URL configurada)
-      let folio = "";
-
-      try{
-        if(APPS_SCRIPT_WEBAPP_URL){
-          const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-              nombre: data.nombre,
-              tamano: data.tamano,
-              tema: data.tema,
-              fecha: data.fecha,
-              evento: data.evento,
-              telefono: data.telefono || "",
-              detalles: data.detalles || ""
-            })
-          });
-
-          const json = await res.json();
-
-          if(json && json.ok){
-            folio = json.folio || "";
-          }
-        }
-      }catch(err){
-        // No rompemos UX
-        console.warn("No se pudo guardar en Sheets:", err);
+      if(!data.ok){
+        throw new Error(data.error || "Error desconocido");
       }
 
-      // 2) Abrir WhatsApp (con folio si se generó)
-      const finalMsg = folio ? `${waMsg}\n\nFolio: ${folio}` : waMsg;
-      openWhatsApp(finalMsg);
+      // 5) Mostrar éxito
+      if(successMsg){
+        successMsg.innerHTML = `
+          ✅ ¡Gracias! Recibimos tu cotización.<br>
+          <span style="opacity:.85">Tu folio es: <b>${data.folio}</b></span>
+        `;
+        successMsg.classList.add("show");
+      }
 
-      // Success UI
-      successBox.classList.add("show");
-      sendBtn.textContent = "Enviado ✓";
+      // 6) LIMPIAR FORMULARIO (PROBLEMA #1 SOLUCIONADO)
+      quoteForm.reset();
 
-      // Si quieres resetear el form, descomenta:
-      // form.reset();
-    });
-  </script>
+      // 7) CERRAR AUTOMÁTICAMENTE (PROBLEMA #1 SOLUCIONADO)
+      setTimeout(() => {
+        closeModal("modalCotizar");
+
+        // Por si vuelve a abrirse: ocultamos el success
+        if(successMsg) successMsg.classList.remove("show");
+
+      }, AUTO_CLOSE_MS);
+
+    }catch(err){
+
+      alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
+
+    }finally{
+
+      // 8) Rehabilitar botón
+      if(submitBtn){
+        submitBtn.disabled = false;
+        submitBtn.style.opacity = "";
+        submitBtn.textContent = "Enviar cotización";
+      }
+    }
+  });
+}
+
+</script>
+
 
 </body>
 </html>
