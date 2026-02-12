@@ -1259,6 +1259,25 @@ section{
   animation: magicGlow 2.5s ease-in-out infinite;
 }
 
+
+    .section-title-highlight {
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--pink), var(--yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 6px rgba(255,79,166,.3), 0 0 12px rgba(255,213,74,.25);
+}
+
+/* Opcional: un ligero glow animado, solo si quieres más “magia” */
+@keyframes sectionGlow {
+  0%, 100% { text-shadow: 0 0 6px rgba(255,213,74,.3), 0 0 12px rgba(255,79,166,.25); }
+  50% { text-shadow: 0 0 10px rgba(255,213,74,.45), 0 0 20px rgba(255,79,166,.38); }
+}
+
+.section-title-highlight-glow {
+  animation: sectionGlow 3s ease-in-out infinite;
+}
+
     
     /*
     ==========================================================
@@ -1382,7 +1401,7 @@ section{
 
             <p class="lead">
               En <span class="highlight-brand">Piñata Colada</span> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
-              <br>
+              <br><br>
               Elige tamaño, dinos la idea… y nosotros <span class="highlight-magic">hacemos la magia</span>.
             </p>
 
@@ -1397,7 +1416,7 @@ section{
 
               <a class="btn btn-ghost" href="#galeria">
                 <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#fff" d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6Zm2 0v12h12V6H6Zm2 2h8v2H8V8Zm0 4h6v2H8v-2Z"/>
+                  <path fill="#fff" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
                 </svg>
                 Ver galería
               </a>
@@ -1419,10 +1438,8 @@ section{
     <section id="tamanos">
       <div class="container">
         <div class="section-title">
-          <div>
-            <h2>Elige tu tamaño</h2>
-            <p>3 tamaños principales. Haz clic en cada uno para ver precios (puedes editarlos en el código).</p>
-          </div>
+          <h2 class="section-title-highlight">Nuestros Tamaños</h2>
+          <p>Elige el tamaño perfecto para tu evento</p>
         </div>
 
         <div class="grid-3">
@@ -1530,7 +1547,7 @@ section{
       <div class="container">
         <div class="section-title">
           <div>
-            <h2>Galería</h2>
+            <<h2 class="section-title-highlight">Galería</h2>
             <p>Ejemplos de estilos y temáticas. (Aquí puedes reemplazar por fotos reales.)</p>
           </div>
         </div>
@@ -1556,7 +1573,7 @@ section{
       <div class="container">
         <div class="section-title">
           <div>
-            <h2>Preguntas frecuentes</h2>
+            <<h2 class="section-title-highlight">Preguntas frecuentes</h2>
             <p>Lo más importante para que tu piñata quede perfecta y llegue a tiempo.</p>
           </div>
         </div>
@@ -1600,7 +1617,7 @@ section{
       <div class="container">
         <div class="section-title">
           <div>
-            <h2>¿List@ para cotizar?</h2>
+            <<h2 class="section-title-highlight">¿Todo listo para cotizar?</h2>
             <p>Te toma menos de 1 minuto. En cuanto nos llegue, te respondemos por WhatsApp.</p>
           </div>
         </div>
