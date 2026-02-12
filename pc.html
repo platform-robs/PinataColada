@@ -592,7 +592,7 @@ section{
 
     .size-name{
       font-weight: 950;
-      letter-spacing: -.3px;
+      letter-spacing: 1.5px;
       font-size: 18px;
       margin: 0;
     }
@@ -1230,7 +1230,36 @@ section{
 }
     
 
+.highlight-brand {
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--pink), var(--yellow));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 10px rgba(255,79,166,.4), 0 0 20px rgba(255,213,74,.3);
+}
 
+.highlight-magic {
+  font-weight: 900;
+  background: linear-gradient(135deg, var(--yellow), var(--pink2));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  text-shadow: 0 0 12px rgba(255,213,74,.35), 0 0 24px rgba(255,79,166,.28);
+}
+
+    
+    
+@keyframes magicGlow {
+  0%,100% { text-shadow: 0 0 8px rgba(255,213,74,.3), 0 0 18px rgba(255,79,166,.25); }
+  50% { text-shadow: 0 0 14px rgba(255,213,74,.5), 0 0 28px rgba(255,79,166,.45); }
+}
+
+.highlight-magic {
+  font-weight: 900;
+  color: var(--yellow);
+  animation: magicGlow 2.5s ease-in-out infinite;
+}
+
+    
     /*
     ==========================================================
     13) REDUCED MOTION (accesibilidad)
@@ -1352,10 +1381,11 @@ section{
             <h1>Piñatas personalizadas que se roban el show 🎉</h1>
 
             <p class="lead">
-              En <b>Piñata Colada</b> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
+              En <span class="highlight-brand">Piñata Colada</span> creamos piñatas con un acabado increíble, súper fotogénicas y listas para tu fiesta.
               <br>
-              Elige tamaño, dinos la idea… y nosotros <b>hacemos la magia</b>.
+              Elige tamaño, dinos la idea… y nosotros <span class="highlight-magic">hacemos la magia</span>.
             </p>
+
 
             <div class="hero-actions">
               <button class="btn btn-primary" id="btnCotizarHero" type="button">
@@ -1374,10 +1404,10 @@ section{
             </div>
 
             <div class="hero-badges">
-              <div class="badge">💖 Personalizadas</div>
+              <div class="badge">🎨 Personalizadas</div>
               <div class="badge">🕒 Entregas por fecha</div>
               <div class="badge">📍 Irapuato, Gto.</div>
-              <div class="badge">🧁 Temáticas: todo</div>
+              <div class="badge">✨ Temáticas: todo</div>
             </div>
           </div>
 
