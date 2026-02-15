@@ -231,6 +231,7 @@ header{
   border-radius: 18px;
   border: var(--border);
   background: rgba(255,255,255,.04);
+  text-align: center;
 }
 
 h1 {
