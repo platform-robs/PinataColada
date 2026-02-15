@@ -233,11 +233,12 @@ header{
   background: rgba(255,255,255,.04);
 }
 
-h1{
-  margin: 16px 0 10px;
-  font-size: clamp(32px, 4vw, 52px);
-  line-height:1.05;
-  letter-spacing:-.6px;
+h1 {
+    margin: 16px 0 10px;
+    font-size: clamp(26px, 3vw, 50px);
+    line-height: 1.05;
+    letter-spacing: -.6px;
+    text-align: center;
 }
 
 .lead{
@@ -246,6 +247,7 @@ h1{
   line-height: 1.7;
   color: var(--muted);
   font-weight: 650;
+  text-align: center;
 }
 
 .highlight-brand{
@@ -506,17 +508,20 @@ textarea{ min-height: 130px; resize: vertical; }
 .footer-title{
   font-weight: 950;
   font-size: 18px;
+  text-align: center;
 }
 .footer-subtitle{
   margin-top:6px;
   color: var(--muted);
   font-weight:650;
+  text-align: center;
 }
 
 .footer-copy{
   margin-top:12px;
   color: rgba(255,255,255,.55);
   font-weight:650;
+  text-align: center;
 }
 
 .footer-socials{
@@ -549,6 +554,7 @@ textarea{ min-height: 130px; resize: vertical; }
   font-weight: 950;
   font-size: 16px;
   margin-bottom: 10px;
+  text-align: center;
 }
 .footer-links{
   display:grid;
