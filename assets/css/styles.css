@@ -372,9 +372,9 @@ section{
 }
 
 .price{
-  margin-top:16px;
-  display:flex;
-  justify-content:flex-end;
+  margin-top: 16px;
+  display: flex;
+  flex-direction: column;
 }
 
 /* ---------- Gallery (Carrusel doble) ---------- */
