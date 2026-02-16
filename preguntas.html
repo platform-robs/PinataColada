@@ -179,11 +179,30 @@
     }
 
 /* ==========================================================
-   FAQ (ACORDEÓN PIÑATA COLADA)
-   - Solo 1 abierto
-   - Animación suave
-   - Estética glass + glow
+   FAQ (PIÑATA COLADA) - PRO
+   - Más contraste
+   - Centrado real
+   - Mejor lectura en móvil
+   - 1 abierto
    ========================================================== */
+
+#faq{
+  padding-top: 10px;
+}
+
+.faq-wrap{
+  max-width: 920px;
+  margin: 0 auto;
+}
+
+.faq-subtitle{
+  margin-top: 10px;
+  text-align:center;
+  color: rgba(255,255,255,.74);
+  font-weight: 650;
+  line-height: 1.6;
+  font-size: 15px;
+}
 
 .pc-faq{
   display:flex;
@@ -192,27 +211,32 @@
   margin-top: 18px;
 }
 
+/* Botón card */
 .faq-item{
   width: 100%;
   text-align:left;
-  border: 1px solid rgba(255,255,255,.12);
-  background: rgba(255,255,255,.06);
   border-radius: 22px;
   padding: 0;
   overflow:hidden;
   cursor:pointer;
 
-  box-shadow: 0 18px 50px rgba(0,0,0,.25);
+  border: 1px solid rgba(255,255,255,.14);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.07), rgba(255,255,255,.04));
+  box-shadow: 0 18px 55px rgba(0,0,0,.35);
 
-  transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+  transition: transform .18s var(--ease), border-color .18s var(--ease), box-shadow .18s var(--ease);
 }
 
 .faq-item:hover{
   transform: translateY(-2px);
   border-color: rgba(255,255,255,.22);
-  background: rgba(255,255,255,.075);
+  box-shadow:
+    0 22px 70px rgba(0,0,0,.38),
+    0 0 0 1px rgba(255,255,255,.06);
 }
 
+/* Pregunta */
 .faq-q{
   display:flex;
   align-items:center;
@@ -223,19 +247,25 @@
 
   font-weight: 950;
   letter-spacing: -.02em;
-  font-size: 15px;
+  font-size: 16px;
+
+  color: rgba(255,255,255,.96);
 }
 
 .faq-q span{
   line-height: 1.35;
 }
 
+/* Flecha */
 .faq-q i{
+  flex: 0 0 auto;
   font-size: 22px;
-  opacity: .9;
-  transition: transform .22s var(--ease);
+  opacity: .95;
+  transform: translateY(1px);
+  transition: transform .22s var(--ease), opacity .22s var(--ease);
 }
 
+/* Respuesta */
 .faq-a{
   max-height: 0px;
   overflow:hidden;
@@ -245,28 +275,53 @@
 .faq-a p{
   margin: 0;
   padding: 0 18px 18px;
-  color: rgba(255,255,255,.74);
+
+  color: rgba(255,255,255,.78);
   font-weight: 650;
-  line-height: 1.65;
+  line-height: 1.75;
+  font-size: 15px;
+}
+
+/* Separador interno */
+.faq-divider{
+  height: 1px;
+  margin: 0 18px;
+  background: rgba(255,255,255,.10);
+  opacity: 0;
+  transition: opacity .22s var(--ease);
 }
 
 /* Estado abierto */
 .faq-item.active{
-  border-color: rgba(255,255,255,.26);
-  background: rgba(255,255,255,.085);
+  border-color: rgba(255,255,255,.28);
+  background:
+    linear-gradient(180deg, rgba(255,255,255,.09), rgba(255,255,255,.05));
+  box-shadow:
+    0 24px 80px rgba(0,0,0,.40),
+    0 0 0 1px rgba(255,255,255,.06),
+    0 0 35px rgba(255,79,166,.14);
 }
 
 .faq-item.active .faq-q i{
-  transform: rotate(180deg);
+  transform: rotate(180deg) translateY(-1px);
 }
 
-/* Glow sutil cuando está abierto (estilo piñata colada) */
-.faq-item.active{
-  box-shadow:
-    0 22px 60px rgba(0,0,0,.30),
-    0 0 0 1px rgba(255,255,255,.06),
-    0 0 30px rgba(255,79,166,.12);
+.faq-item.active .faq-divider{
+  opacity: 1;
 }
+
+/* Mejor en móvil */
+@media (max-width: 520px){
+  .faq-q{
+    font-size: 15px;
+    padding: 16px 16px;
+  }
+  .faq-a p{
+    padding: 0 16px 16px;
+    font-size: 14.5px;
+  }
+}
+
 
 
     
@@ -348,78 +403,107 @@
 <!-- FAQ -->
 <section id="faq">
   <div class="container">
-    <div class="section-title">
-      <div>
-        <h2 class="section-title-highlight">Preguntas frecuentes</h2>
-        <p>Lo más importante para que tu piñata quede perfecta y llegue a tiempo.</p>
+    <div class="faq-wrap">
+
+      <div class="section-title" style="justify-content:center;">
+        <div style="width:100%; text-align:center;">
+          <h2 class="section-title-highlight">preguntas frecuentes</h2>
+          <p class="faq-subtitle">
+            lo más importante para que tu piñata quede perfecta y llegue a tiempo ✨
+          </p>
+        </div>
       </div>
-    </div>
 
-    <div class="faq pc-faq" id="faqList">
+      <div class="pc-faq" id="faqList">
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Con cuánta anticipación debo pedir?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>Lo ideal es de 5 a 10 días. En temporadas altas puede variar, así que entre antes mejor.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿con cuánta anticipación debo pedir?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              lo ideal es de <strong>5 a 10 días</strong>. en temporadas altas puede variar,
+              así que entre antes mejor.
+            </p>
+          </div>
+        </button>
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Hacen piñatas 100% personalizadas?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>Sí. Todas son hechas a tu temática. En la cotización puedes describir tu idea y referencias.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿hacen piñatas 100% personalizadas?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              sí ✨ todas son hechas a tu temática. en la cotización puedes describir tu idea
+              y mandar referencias.
+            </p>
+          </div>
+        </button>
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Se pueden hacer de cualquier temática?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>¡Claro! Personajes, deportes, películas, videojuegos, logos, nombres, etc.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿se pueden hacer de cualquier temática?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              ¡claro! personajes, deportes, películas, videojuegos, logos, nombres, etc.
+            </p>
+          </div>
+        </button>
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Qué incluye el precio?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>Incluye diseño, materiales, armado y acabados. El relleno (dulces) se cotiza aparte si lo requieres.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿qué incluye el precio?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              incluye diseño, materiales, armado y acabados.
+              el relleno (dulces) se cotiza aparte si lo requieres.
+            </p>
+          </div>
+        </button>
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Entregan a domicilio?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>Podemos acordar punto de entrega o envío local. Depende de la zona y tamaño.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿entregan a domicilio?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              podemos acordar punto de entrega o envío local.
+              depende de la zona y del tamaño.
+            </p>
+          </div>
+        </button>
 
-      <button class="faq-item" type="button">
-        <div class="faq-q">
-          <span>¿Puedo pedir varias piñatas?</span>
-          <i class="fi fi-rr-angle-small-down"></i>
-        </div>
-        <div class="faq-a">
-          <p>Sí. En el formulario puedes detallar lo que necesitas y te contactamos para ajustar la cotización.</p>
-        </div>
-      </button>
+        <button class="faq-item" type="button">
+          <div class="faq-q">
+            <span>¿puedo pedir varias piñatas?</span>
+            <i class="fi fi-rr-angle-small-down"></i>
+          </div>
+          <div class="faq-divider"></div>
+          <div class="faq-a">
+            <p>
+              sí 😊 en el formulario puedes detallar lo que necesitas y te contactamos
+              para ajustar la cotización.
+            </p>
+          </div>
+        </button>
 
+      </div>
     </div>
   </div>
 </section>
+
 
 
   </main>
@@ -485,53 +569,54 @@
     </div>
   </div>
 
-  <script>
-/* ==========================================================
-   FAQ: Solo 1 abierto (acordeón)
-   ========================================================== */
+<script>
 (function(){
   const faqList = document.querySelector("#faqList");
   if(!faqList) return;
 
   const items = Array.from(faqList.querySelectorAll(".faq-item"));
 
+  function close(btn){
+    btn.classList.remove("active");
+    const ans = btn.querySelector(".faq-a");
+    if(ans) ans.style.maxHeight = "0px";
+  }
+
+  function open(btn){
+    btn.classList.add("active");
+    const ans = btn.querySelector(".faq-a");
+    if(ans) ans.style.maxHeight = ans.scrollHeight + "px";
+  }
+
   function closeAll(except){
     items.forEach(btn => {
-      if(btn === except) return;
-      btn.classList.remove("active");
-      const ans = btn.querySelector(".faq-a");
-      if(ans) ans.style.maxHeight = "0px";
+      if(btn !== except) close(btn);
     });
   }
 
   items.forEach(btn => {
-    const ans = btn.querySelector(".faq-a");
-
     btn.addEventListener("click", () => {
       const isOpen = btn.classList.contains("active");
-
-      // Cierra todas las demás
       closeAll(btn);
 
-      // Toggle del actual
-      if(isOpen){
-        btn.classList.remove("active");
-        if(ans) ans.style.maxHeight = "0px";
-      }else{
-        btn.classList.add("active");
-        if(ans) ans.style.maxHeight = ans.scrollHeight + "px";
-      }
+      if(isOpen) close(btn);
+      else open(btn);
     });
   });
 
-  // Abre la primera por defecto (opcional)
-  if(items[0]){
-    items[0].classList.add("active");
-    const a = items[0].querySelector(".faq-a");
-    if(a) a.style.maxHeight = a.scrollHeight + "px";
-  }
+  // Abre la primera por defecto
+  if(items[0]) open(items[0]);
+
+  // Recalcula alturas si cambia el tamaño (móvil)
+  window.addEventListener("resize", () => {
+    const active = faqList.querySelector(".faq-item.active");
+    if(!active) return;
+    const ans = active.querySelector(".faq-a");
+    if(ans) ans.style.maxHeight = ans.scrollHeight + "px";
+  });
 })();
 </script>
+
 
 
   <script src="assets/js/main.js"></script>
