@@ -14,23 +14,25 @@
   <!-- HEADER -->
   <header>
     <div class="container">
+
       <div class="nav">
-  
-        <!-- Logo -->
-        <a href="index.html" class="brand">
-          <img class="brand-logo" src="assets/logo.png" alt="Piñata Colada">
-        </a>
-  
+<!-- Marca con logo -->
+<div class="brand">
+  <img src="assets/logo.png" alt="Piñata Colada" class="brand-logo" />
+</div>
+
+
         <!-- Links desktop -->
-        <nav class="nav-links">
-          <a href="tamanos.html">Tamaños</a>
-          <a href="galeria.html">Galería</a>
-          <a href="preguntas.html">Preguntas</a>
-          <a href="contactanos.html">Contáctanos</a>
+        <nav class="nav-links" aria-label="Secciones">
+          <a href="#tamanos">Tamaños</a>
+          <a href="#galeria">Galería</a>
+          <a href="#faq">Preguntas</a>
+          <a href="#contacto">Cotizar</a>
         </nav>
-  
-        <!-- CTA desktop -->
+
+        <!-- CTA -->
         <div class="nav-cta">
+          <!-- En móvil este se oculta para no saturar -->
           <button class="btn btn-ghost" id="btnWhats" type="button">
             <!-- icon WhatsApp -->
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -46,44 +48,42 @@
             </svg>
             Realizar cotización
           </button>
+
+          <!-- Hamburguesa (móvil) -->
+          <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path d="M4 7h16v2H4V7Zm0 8h16v2H4v-2Zm0-4h16v2H4v-2Z"/>
+            </svg>
+          </button>
         </div>
-        </div>
-  
-        <!-- Botón hamburguesa -->
-        <button class="menu-btn" id="menuBtn" aria-label="Abrir menú">
-          ☰
-        </button>
-  
       </div>
-  
+
       <!-- Menú móvil -->
-      <div class="mobile-nav" id="mobileNav">
+      <div class="mobile-nav" id="mobileNav" aria-label="Menú móvil">
         <div class="mobile-links">
-          <a href="tamanos.html">Tamaños</a>
-          <a href="galeria.html">Galería</a>
-          <a href="preguntas.html">Preguntas</a>
-          <a href="contactanos.html">Contáctanos</a>
+          <a href="#tamanos">Tamaños <span>→</span></a>
+          <a href="#galeria">Galería <span>→</span></a>
+          <a href="#faq">Preguntas <span>→</span></a>
+          <a href="#contacto">Cotizar <span>→</span></a>
         </div>
-  
+
         <div class="mobile-cta">
-          <button class="btn btn-ghost" id="btnWhats" type="button">
-            <!-- icon WhatsApp -->
+          <button class="btn btn-ghost" id="btnWhatsMobile" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
             </svg>
-            WhatsApp
+            Escribir por WhatsApp
           </button>
 
-          <button class="btn btn-primary" id="btnCotizarTop" type="button">
-            <!-- icon spark -->
+          <button class="btn btn-primary" id="btnCotizarMobile" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
             </svg>
-            Realizar cotización
+            Cotizar ahora
           </button>
         </div>
       </div>
-  
+
     </div>
   </header>
 
