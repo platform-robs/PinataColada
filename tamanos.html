@@ -483,7 +483,7 @@
 
   <!-- Script específico para leer precios desde Google Sheets -->
 <script>
-  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/pubhtml#gid=915218915";
+  const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/pub?gid=915218915&single=true&output=csv";
 
   function norm(s){
     return String(s || "")
@@ -499,10 +499,11 @@
 
     if (s === "" || s === "-") return "—";
 
-    // Si no es número, lo regresamos tal cual
-    if (isNaN(Number(s))) return s;
+    // si trae $ o texto, lo regresamos
+    const raw = s.replace(/\$/g, "").replace(/,/g, "").trim();
+    if (isNaN(Number(raw))) return s;
 
-    return "$" + Number(s).toLocaleString("es-MX");
+    return "$" + Number(raw).toLocaleString("es-MX");
   }
 
   function setCardPrice(tipo, precio){
@@ -517,26 +518,19 @@
   }
 
   function parseCSV(text){
-    // CSV simple (2 columnas) pero con soporte de comillas
     const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
     if (lines.length <= 1) return {};
 
-    // quitamos encabezado
-    lines.shift();
+    lines.shift(); // quita encabezado
 
     const map = {};
 
     for (const line of lines){
-      // separa primera coma solamente
       let i = line.indexOf(",");
       if (i === -1) continue;
 
-      let tipo = line.slice(0, i).trim();
-      let precio = line.slice(i + 1).trim();
-
-      // quita comillas si vienen
-      tipo = tipo.replace(/^"|"$/g, "");
-      precio = precio.replace(/^"|"$/g, "");
+      let tipo = line.slice(0, i).trim().replace(/^"|"$/g, "");
+      let precio = line.slice(i + 1).trim().replace(/^"|"$/g, "");
 
       if (tipo) map[norm(tipo)] = precio;
     }
@@ -547,18 +541,17 @@
   async function loadPrices(){
     try{
       const res = await fetch(CSV_URL);
-
       if(!res.ok) throw new Error("HTTP " + res.status);
 
       const csv = await res.text();
       const map = parseCSV(csv);
 
-      setCardPrice("S — Sutil", map[norm("S — Sutil")] || map[norm("S - Sutil")]);
-      setCardPrice("M — Colada", map[norm("M — Colada")] || map[norm("M - Colada")]);
-      setCardPrice("L — Épica", map[norm("L — Épica")] || map[norm("L - Epica")]);
+      setCardPrice("S — Sutil", map[norm("S — Sutil")] || map[norm("S - Sutil")] || map[norm("S")]);
+      setCardPrice("M — Colada", map[norm("M — Colada")] || map[norm("M - Colada")] || map[norm("M")]);
+      setCardPrice("L — Epica", map[norm("L — Epica")] || map[norm("L - Epica")] || map[norm("L")]);
 
-      // Este se deja fijo (no depende de Sheets)
-      setCardPrice("Diseño a tu temática", "Depende del diseño");
+      // diseño a medida
+      setCardPrice("diseno a tu tematica", "depende del diseno");
 
     }catch(e){
       console.error("Error cargando precios:", e);
@@ -573,6 +566,7 @@
 
   loadPrices();
 </script>
+
 
 
 </body>
