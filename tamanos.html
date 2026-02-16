@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="assets/css/styles.css">
 
   <!-- F-ICON -->
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/f-icon@1.0.0/css/f-icon.min.css">
+  <link rel="stylesheet" href="https://cdn-uicons.flaticon.com/2.4.2/uicons-regular-rounded/css/uicons-regular-rounded.css">
 
   <style>
     /* Solo detalles específicos para esta página */
@@ -41,9 +41,11 @@
 
     .size-top{
       display:flex;
-      align-items:flex-start;
-      justify-content:space-between;
-      gap:14px;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      text-align:center;
+      gap:12px;
       margin-bottom:12px;
     }
 
@@ -87,6 +89,20 @@
       justify-content: center;
       gap: 12px;
     }
+
+    .size-card{
+  text-align:center;
+}
+
+.size-meta{
+  justify-content:center;
+}
+
+.size-price{
+  flex-direction:column;
+  text-align:center;
+}
+
 
     .price-tag{
       font-size:18px;
@@ -414,11 +430,21 @@
 <script>
   const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/pub?gid=915218915&single=true&output=csv";
 
+  function norm(s){
+    return String(s || "")
+      .trim()
+      .toLowerCase()
+      .normalize("NFD")
+      .replace(/[\u0300-\u036f]/g, "");
+  }
+
   function moneyMXN(value){
     if (!value) return "—";
     const s = String(value).trim();
 
-    // Si no es número (ej: "depende de los requerimientos")
+    if (s === "" || s === "-") return "—";
+
+    // Si no es número, lo regresamos tal cual
     if (isNaN(Number(s))) return s;
 
     return "$" + Number(s).toLocaleString("es-MX");
@@ -435,38 +461,30 @@
     el.textContent = moneyMXN(precio);
   }
 
-  function setErrorAll(){
-    document.querySelectorAll(".price-value").forEach(el => {
-      el.classList.remove("loading-price");
-      el.classList.add("error-price");
-      el.textContent = "No disponible";
-    });
-  }
-
-  // Normaliza texto para que no fallen acentos/espacios
-  function norm(s){
-    return String(s || "")
-      .trim()
-      .toLowerCase()
-      .normalize("NFD")
-      .replace(/[\u0300-\u036f]/g, "");
-  }
-
   function parseCSV(text){
-    // CSV simple (2 columnas). Esto es suficiente para tu tabla.
-    const lines = text.split("\n").map(l => l.trim()).filter(Boolean);
+    // CSV simple (2 columnas) pero con soporte de comillas
+    const lines = text.split(/\r?\n/).filter(l => l.trim() !== "");
+    if (lines.length <= 1) return {};
 
-    // Quita encabezado
+    // quitamos encabezado
     lines.shift();
 
     const map = {};
-    lines.forEach(line => {
-      const parts = line.split(",");
-      const tipo = parts[0]?.trim();
-      const precio = parts.slice(1).join(",").trim(); // por si el texto tiene comas
 
-      if(tipo) map[norm(tipo)] = precio;
-    });
+    for (const line of lines){
+      // separa primera coma solamente
+      let i = line.indexOf(",");
+      if (i === -1) continue;
+
+      let tipo = line.slice(0, i).trim();
+      let precio = line.slice(i + 1).trim();
+
+      // quita comillas si vienen
+      tipo = tipo.replace(/^"|"$/g, "");
+      precio = precio.replace(/^"|"$/g, "");
+
+      if (tipo) map[norm(tipo)] = precio;
+    }
 
     return map;
   }
@@ -474,18 +492,27 @@
   async function loadPrices(){
     try{
       const res = await fetch(CSV_URL);
-      const csv = await res.text();
 
+      if(!res.ok) throw new Error("HTTP " + res.status);
+
+      const csv = await res.text();
       const map = parseCSV(csv);
 
-      setCardPrice("Chica", map[norm("Chica")]);
-      setCardPrice("Estándar", map[norm("Estándar")]);
-      setCardPrice("Premium", map[norm("Premium")]);
-      setCardPrice("Diseño exclusivo", map[norm("Diseño exclusivo")]);
+      setCardPrice("S — Sutil", map[norm("S — Sutil")] || map[norm("S - Sutil")]);
+      setCardPrice("M — Colada", map[norm("M — Colada")] || map[norm("M - Colada")]);
+      setCardPrice("L — Épica", map[norm("L — Épica")] || map[norm("L - Epica")]);
+
+      // Este se deja fijo (no depende de Sheets)
+      setCardPrice("Diseño a tu temática", "Depende del diseño");
 
     }catch(e){
       console.error("Error cargando precios:", e);
-      setErrorAll();
+
+      document.querySelectorAll(".price-value").forEach(el => {
+        el.classList.remove("loading-price");
+        el.classList.add("error-price");
+        el.textContent = "—";
+      });
     }
   }
 
