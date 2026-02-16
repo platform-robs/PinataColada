@@ -177,6 +177,99 @@
       color: rgba(255,110,110,.95);
       font-weight:900;
     }
+
+/* ==========================================================
+   FAQ (ACORDEÓN PIÑATA COLADA)
+   - Solo 1 abierto
+   - Animación suave
+   - Estética glass + glow
+   ========================================================== */
+
+.pc-faq{
+  display:flex;
+  flex-direction:column;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.faq-item{
+  width: 100%;
+  text-align:left;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(255,255,255,.06);
+  border-radius: 22px;
+  padding: 0;
+  overflow:hidden;
+  cursor:pointer;
+
+  box-shadow: 0 18px 50px rgba(0,0,0,.25);
+
+  transition: transform .18s var(--ease), border-color .18s var(--ease), background .18s var(--ease);
+}
+
+.faq-item:hover{
+  transform: translateY(-2px);
+  border-color: rgba(255,255,255,.22);
+  background: rgba(255,255,255,.075);
+}
+
+.faq-q{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap: 14px;
+
+  padding: 18px 18px;
+
+  font-weight: 950;
+  letter-spacing: -.02em;
+  font-size: 15px;
+}
+
+.faq-q span{
+  line-height: 1.35;
+}
+
+.faq-q i{
+  font-size: 22px;
+  opacity: .9;
+  transition: transform .22s var(--ease);
+}
+
+.faq-a{
+  max-height: 0px;
+  overflow:hidden;
+  transition: max-height .28s var(--ease);
+}
+
+.faq-a p{
+  margin: 0;
+  padding: 0 18px 18px;
+  color: rgba(255,255,255,.74);
+  font-weight: 650;
+  line-height: 1.65;
+}
+
+/* Estado abierto */
+.faq-item.active{
+  border-color: rgba(255,255,255,.26);
+  background: rgba(255,255,255,.085);
+}
+
+.faq-item.active .faq-q i{
+  transform: rotate(180deg);
+}
+
+/* Glow sutil cuando está abierto (estilo piñata colada) */
+.faq-item.active{
+  box-shadow:
+    0 22px 60px rgba(0,0,0,.30),
+    0 0 0 1px rgba(255,255,255,.06),
+    0 0 30px rgba(255,79,166,.12);
+}
+
+
+    
   </style>
 </head>
 
@@ -253,48 +346,70 @@
   <main>
 
 <!-- FAQ -->
-    <section id="faq">
-      <div class="container">
-        <div class="section-title">
-          <div>
-            <h2 class="section-title-highlight">Preguntas frecuentes</h2>
-            <p>Lo más importante para que tu piñata quede perfecta y llegue a tiempo.</p>
-          </div>
-        </div>
+<div class="faq pc-faq" id="faqList">
 
-        <div class="faq">
-          <details>
-            <summary>¿Con cuánta anticipación debo pedir?</summary>
-            <p>Lo ideal es de 5 a 10 días. En temporadas altas puede variar, así que entre antes mejor.</p>
-          </details>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Con cuánta anticipación debo pedir?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>Lo ideal es de 5 a 10 días. En temporadas altas puede variar, así que entre antes mejor.</p>
+    </div>
+  </button>
 
-          <details>
-            <summary>¿Hacen piñatas 100% personalizadas?</summary>
-            <p>Sí. Puedes elegir la opción “100% personalizada” en la cotización y describir tu idea.</p>
-          </details>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Hacen piñatas 100% personalizadas?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>Sí. Todas son hechas a tu temática. En la cotización puedes describir tu idea y referencias.</p>
+    </div>
+  </button>
 
-          <details>
-            <summary>¿Se pueden hacer de cualquier temática?</summary>
-            <p>¡Claro! Personajes, deportes, películas, videojuegos, logos, nombres, etc.</p>
-          </details>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Se pueden hacer de cualquier temática?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>¡Claro! Personajes, deportes, películas, videojuegos, logos, nombres, etc.</p>
+    </div>
+  </button>
 
-          <details>
-            <summary>¿Qué incluye el precio?</summary>
-            <p>Incluye el diseño, materiales, armado y acabados. El relleno (dulces) se cotiza aparte si lo requieres.</p>
-          </details>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Qué incluye el precio?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>Incluye diseño, materiales, armado y acabados. El relleno (dulces) se cotiza aparte si lo requieres.</p>
+    </div>
+  </button>
 
-          <details>
-            <summary>¿Entregan a domicilio?</summary>
-            <p>Podemos acordar punto de entrega o envío local. Depende de la zona y tamaño.</p>
-          </details>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Entregan a domicilio?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>Podemos acordar punto de entrega o envío local. Depende de la zona y tamaño.</p>
+    </div>
+  </button>
 
-          <details>
-            <summary>¿Puedo pedir varias piñatas?</summary>
-            <p>Sí. En el formulario puedes detallar lo que necesitas y te contactamos para ajustar la cotización.</p>
-          </details>
-        </div>
-      </div>
-    </section>
+  <button class="faq-item" type="button">
+    <div class="faq-q">
+      <span>¿Puedo pedir varias piñatas?</span>
+      <i class="fi fi-rr-angle-small-down"></i>
+    </div>
+    <div class="faq-a">
+      <p>Sí. En el formulario puedes detallar lo que necesitas y te contactamos para ajustar la cotización.</p>
+    </div>
+  </button>
+
+</div>
+
 
   </main>
 
@@ -358,6 +473,55 @@
       </div>
     </div>
   </div>
+
+  <script>
+/* ==========================================================
+   FAQ: Solo 1 abierto (acordeón)
+   ========================================================== */
+(function(){
+  const faqList = document.querySelector("#faqList");
+  if(!faqList) return;
+
+  const items = Array.from(faqList.querySelectorAll(".faq-item"));
+
+  function closeAll(except){
+    items.forEach(btn => {
+      if(btn === except) return;
+      btn.classList.remove("active");
+      const ans = btn.querySelector(".faq-a");
+      if(ans) ans.style.maxHeight = "0px";
+    });
+  }
+
+  items.forEach(btn => {
+    const ans = btn.querySelector(".faq-a");
+
+    btn.addEventListener("click", () => {
+      const isOpen = btn.classList.contains("active");
+
+      // Cierra todas las demás
+      closeAll(btn);
+
+      // Toggle del actual
+      if(isOpen){
+        btn.classList.remove("active");
+        if(ans) ans.style.maxHeight = "0px";
+      }else{
+        btn.classList.add("active");
+        if(ans) ans.style.maxHeight = ans.scrollHeight + "px";
+      }
+    });
+  });
+
+  // Abre la primera por defecto (opcional)
+  if(items[0]){
+    items[0].classList.add("active");
+    const a = items[0].querySelector(".faq-a");
+    if(a) a.style.maxHeight = a.scrollHeight + "px";
+  }
+})();
+</script>
+
 
   <script src="assets/js/main.js"></script>
 
