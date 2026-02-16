@@ -1,696 +1,175 @@
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Piñata Colada | Piñatas personalizadas</title>
-  <meta name="description" content="Piñatas personalizadas en Irapuato, Gto. Diseños unicos, entregas por fecha y cotizacion rapida." />
+  <title>Tamaños | Piñata Colada</title>
 
-  <!-- Google Font -->
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;900;950&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/styles.css">
+
+  <!-- F-ICON -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/f-icon@1.0.0/css/f-icon.min.css">
 
   <style>
-    :root{
-      --bg: #0b0b10;
-      --card: rgba(255,255,255,.06);
-      --stroke: rgba(255,255,255,.12);
-      --muted: rgba(255,255,255,.72);
-      --muted2: rgba(255,255,255,.55);
-      --pink: #ff4fa6;
-      --yellow: #ffd24a;
-      --ease: cubic-bezier(.2,.9,.2,1);
-      --radius: 22px;
-      --shadow: 0 14px 40px rgba(0,0,0,.45);
-    }
-
-    *{ box-sizing:border-box; }
-    html,body{ margin:0; padding:0; background: radial-gradient(1200px 700px at 50% -20%, rgba(255,79,166,.20), transparent 55%),
-                                   radial-gradient(900px 600px at 0% 30%, rgba(255,210,74,.18), transparent 55%),
-                                   var(--bg);
-              color:#fff; font-family:"Montserrat",system-ui,-apple-system,Segoe UI,Roboto,Arial; }
-    a{ color:inherit; text-decoration:none; }
-    img{ max-width:100%; display:block; }
-
-    .container{ width:min(1100px, 92vw); margin:0 auto; }
-
-    /* ==========================================================
-       NAVBAR (mobile first)
-       ========================================================== */
-    header{
-      position: sticky;
-      top:0;
-      z-index: 50;
-      background: rgba(10,10,16,.55);
-      backdrop-filter: blur(14px);
-      border-bottom: 1px solid rgba(255,255,255,.08);
-    }
-
-    .nav{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 12px 0;
-      gap: 12px;
-    }
-
-    .brand{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-    }
-
-    .brand-logo{
-      width: 44px;
-      height: 44px;
-      border-radius: 14px;
-      object-fit: cover;
-      box-shadow: 0 10px 30px rgba(0,0,0,.35);
-    }
-
-    .nav-links{
-      display:none;
-      gap: 14px;
-      align-items:center;
-    }
-
-    .nav-links a{
-      font-weight: 800;
-      color: rgba(255,255,255,.85);
-      padding: 10px 12px;
-      border-radius: 14px;
-      transition: background .18s var(--ease), transform .18s var(--ease);
-    }
-
-    .nav-links a:hover{
-      background: rgba(255,255,255,.06);
-      transform: translateY(-1px);
-    }
-
-    .nav-cta{
-      display:flex;
-      align-items:center;
-      gap: 10px;
-    }
-
-    .menu-btn{
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      cursor:pointer;
-    }
-    .menu-btn svg{ width: 22px; height: 22px; fill:#fff; opacity:.9; }
-
-    .mobile-nav{
-      display:none;
-      padding: 12px 0 16px;
-      border-top: 1px solid rgba(255,255,255,.08);
-    }
-    .mobile-nav.open{ display:block; }
-
-    .mobile-links{
+    /* Solo detalles específicos para esta página */
+    .sizes-grid{
       display:grid;
-      gap: 10px;
-      margin-top: 12px;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap:18px;
     }
 
-    .mobile-links a{
-      display:flex;
-      align-items:center;
-      justify-content:space-between;
-      padding: 14px 16px;
-      border-radius: 18px;
+    @media (max-width: 900px){
+      .sizes-grid{ grid-template-columns: 1fr; }
+    }
+
+    .size-card{
+      position:relative;
+      border-radius:22px;
+      padding:22px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 900;
-      opacity:.95;
-    }
-
-    .mobile-cta{
-      display:grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    /* ==========================================================
-       BUTTONS
-       ========================================================== */
-    .btn{
-      border:0;
-      outline:0;
-      cursor:pointer;
-      font-family: inherit;
-      font-weight: 900;
-      border-radius: 18px;
-      padding: 14px 16px;
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      gap: 10px;
-      transition: transform .18s var(--ease), opacity .18s var(--ease), background .18s var(--ease);
-      text-align:center;
-      line-height:1;
-      user-select:none;
-    }
-
-    .btn svg{ width: 20px; height: 20px; }
-
-    .btn-primary{
-      background: linear-gradient(135deg, var(--yellow), #fff1a8);
-      color:#111;
-      box-shadow: 0 16px 40px rgba(255,210,74,.12);
-    }
-    .btn-primary:hover{ transform: translateY(-2px); }
-    .btn-primary:active{ transform: translateY(0) scale(.99); }
-
-    .btn-ghost{
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      color:#fff;
-      opacity:.95;
-    }
-    .btn-ghost:hover{ transform: translateY(-2px); opacity:1; }
-    .btn-ghost:active{ transform: translateY(0) scale(.99); }
-
-    /* ==========================================================
-       HERO (mobile first)
-       ========================================================== */
-    .hero{
-      padding: 22px 0 10px;
-    }
-
-    .hero-grid{
-      display:grid;
-      gap: 18px;
-    }
-
-    .logo-wrap{
-      display:flex;
-      justify-content:center;
-      margin-top: 6px;
-    }
-
-    .logo-inner{
-      width: 120px;
-      height: 120px;
-      border-radius: 28px;
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: var(--shadow);
-      display:flex;
-      align-items:center;
-      justify-content:center;
-      padding: 14px;
-    }
-
-    .logo-img{
-      width: 100%;
-      height: 100%;
-      object-fit: contain;
-      filter: drop-shadow(0 10px 18px rgba(0,0,0,.35));
-    }
-
-    /* Sutil movimiento tipo piñata */
-    .hit{
-      animation: hit 3.2s ease-in-out infinite;
-      transform-origin: 50% 10%;
-    }
-    @keyframes hit{
-      0%{ transform: rotate(-1.5deg) translateY(0px); }
-      40%{ transform: rotate(2deg) translateY(-2px); }
-      70%{ transform: rotate(-1deg) translateY(0px); }
-      100%{ transform: rotate(-1.5deg) translateY(0px); }
-    }
-
-    .kicker{
-      display:inline-block;
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      font-weight: 800;
-      color: rgba(255,255,255,.9);
-      font-size: 13px;
-      letter-spacing: -.2px;
-    }
-
-    h1{
-      margin: 14px 0 10px;
-      font-size: 32px;
-      line-height: 1.08;
-      letter-spacing: -1px;
-    }
-
-    .lead{
-      color: rgba(255,255,255,.82);
-      font-weight: 650;
-      line-height: 1.65;
-      margin: 0 0 16px;
-    }
-
-    .highlight-brand{
-      font-weight: 950;
-      background: linear-gradient(135deg, var(--pink), var(--yellow));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 0 14px rgba(255,79,166,.28);
-    }
-
-    .highlight-magic{
-      font-weight: 950;
-      background: linear-gradient(135deg, #fff, var(--yellow));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-actions{
-      display:grid;
-      gap: 10px;
-      margin-top: 12px;
-    }
-
-    .hero-badges{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-top: 14px;
-      justify-content:center;
-    }
-
-    .badge{
-      padding: 10px 14px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.05);
       border: 1px solid rgba(255,255,255,.10);
-      font-weight: 850;
-      color: rgba(255,255,255,.85);
-      font-size: 13px;
+      box-shadow: 0 18px 50px rgba(0,0,0,.30);
+      overflow:hidden;
+      transition: transform .2s ease, border-color .2s ease;
     }
 
-    /* ==========================================================
-       SECTION
-       ========================================================== */
-    section{
-      padding: 26px 0;
-    }
-
-    .section-title{
-      text-align:center;
-      margin-bottom: 14px;
-    }
-
-    .section-title h2{
-      margin:0;
-      font-size: 22px;
-      letter-spacing: -.5px;
-    }
-
-    .section-title p{
-      margin: 8px auto 0;
-      max-width: 52ch;
-      color: rgba(255,255,255,.70);
-      font-weight: 650;
-      line-height: 1.6;
-    }
-
-    .section-title-highlight{
-      font-weight: 950;
-      background: linear-gradient(135deg, var(--pink), var(--yellow));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ==========================================================
-       MINI GRID LINKS (index only)
-       ========================================================== */
-    .quick-grid{
-      display:grid;
-      gap: 12px;
-      margin-top: 16px;
-    }
-
-    .quick-card{
-      padding: 16px 16px;
-      border-radius: var(--radius);
-      background: rgba(255,255,255,.05);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 18px 50px rgba(0,0,0,.35);
-      transition: transform .18s var(--ease), background .18s var(--ease);
-    }
-
-    .quick-card:hover{
+    .size-card:hover{
       transform: translateY(-2px);
-      background: rgba(255,255,255,.07);
+      border-color: rgba(255,255,255,.22);
     }
 
-    .quick-card b{
-      font-weight: 950;
-      letter-spacing: -.3px;
-      font-size: 16px;
-    }
-
-    .quick-card p{
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.72);
-      font-weight: 650;
-      line-height: 1.55;
-    }
-
-    /* ==========================================================
-       FOOTER (mobile first, centered)
-       ========================================================== */
-    .site-footer{
-      margin-top: 34px;
-      padding: 28px 0 26px;
-      border-top: 1px solid rgba(255,255,255,.10);
-      background: rgba(10,10,16,.55);
-      backdrop-filter: blur(14px);
-      text-align: center;
-    }
-
-    .footer-grid{
-      display:grid;
-      grid-template-columns: 1fr;
-      gap: 18px;
-      align-items:start;
-      justify-items:center;
-    }
-
-    .footer-col{
-      width: 100%;
-      max-width: 420px;
-      display:flex;
-      flex-direction: column;
-      gap: 12px;
-      align-items:center;
-      text-align:center;
-    }
-
-    .footer-title{
-      font-weight: 950;
-      font-size: 18px;
-      letter-spacing: -.3px;
-    }
-
-    .footer-subtitle{
-      color: var(--muted);
-      font-weight: 650;
-    }
-
-    .footer-socials{
-      display:flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      justify-content:center;
-    }
-
-    .social-btn{
-      display:inline-flex;
-      align-items:center;
-      justify-content:center;
-      width: 46px;
-      height: 46px;
-      border-radius: 16px;
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
-      opacity: .92;
-    }
-
-    .social-btn svg{
-      width: 22px;
-      height: 22px;
-      fill: #fff;
-    }
-
-    .social-btn:hover{
-      opacity: 1;
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.10);
-    }
-
-    .footer-copy{
-      color: rgba(255,255,255,.55);
-      font-weight: 650;
-      font-size: 13px;
-      line-height: 1.5;
-    }
-
-    .footer-title-sm{
-      font-weight: 950;
-      letter-spacing: -.2px;
-      font-size: 15px;
-    }
-
-    .footer-links{
-      width: 100%;
-      display:flex;
-      flex-direction: column;
-      gap: 10px;
-      margin-top: 6px;
-    }
-
-    /* IMPORTANTE: que se vean LARGOS, no gruesos */
-    .footer-link{
-      width: 100%;
-      display:flex;
-      align-items:center;
-      justify-content:center;   /* centra texto e icono */
-      gap: 10px;
-
-      padding: 14px 16px;
-      border-radius: 18px;
-
-      background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-
-      font-weight: 900;
-      color: #fff;
-      cursor: pointer;
-
-      transition: transform .18s var(--ease), background .18s var(--ease), opacity .18s var(--ease);
-      text-align: center;
-      opacity: .92;
-    }
-
-    .footer-link:hover{
-      opacity: 1;
-      transform: translateY(-2px);
-      background: rgba(255,255,255,.10);
-    }
-
-    .footer-link:active{
-      transform: translateY(0px) scale(.99);
-    }
-
-    .link-ico{
-      width: 18px;
-      height: 18px;
-      fill: #fff;
-      flex: 0 0 auto;
-    }
-
-    /* ==========================================================
-       MODALS
-       ========================================================== */
-    .modal{
-      position: fixed;
-      inset:0;
-      display:none;
-      align-items:center;
-      justify-content:center;
-      padding: 18px;
-      background: rgba(0,0,0,.55);
-      z-index: 90;
-    }
-
-    .modal.open{ display:flex; }
-
-    .modal-card{
-      width: min(560px, 92vw);
-      max-height: 86vh;
-      overflow:auto;
-      border-radius: 22px;
-      background: rgba(18,18,26,.92);
-      border: 1px solid rgba(255,255,255,.12);
-      box-shadow: 0 30px 90px rgba(0,0,0,.65);
-    }
-
-    .modal-head{
-      padding: 16px 16px 12px;
+    .size-top{
       display:flex;
       align-items:flex-start;
       justify-content:space-between;
-      gap: 12px;
-      border-bottom: 1px solid rgba(255,255,255,.10);
+      gap:14px;
+      margin-bottom:12px;
     }
 
-    .modal-head h3{
-      margin:0;
-      font-size: 18px;
-      letter-spacing: -.4px;
-    }
-
-    .modal-head p{
-      margin: 6px 0 0;
-      color: rgba(255,255,255,.65);
-      font-weight: 650;
-      line-height: 1.55;
-      font-size: 13px;
-    }
-
-    .x{
-      width: 42px;
-      height: 42px;
-      border-radius: 16px;
-      border: 1px solid rgba(255,255,255,.12);
-      background: rgba(255,255,255,.06);
-      color:#fff;
-      font-size: 22px;
-      cursor:pointer;
-    }
-
-    /* ==========================================================
-       FORM
-       ========================================================== */
-    form{ padding: 16px; }
-
-    .success{
-      display:none;
-      margin-bottom: 12px;
-      padding: 14px 14px;
-      border-radius: 18px;
-      background: rgba(80,255,170,.10);
-      border: 1px solid rgba(80,255,170,.22);
-      color: rgba(255,255,255,.92);
-      font-weight: 800;
-      line-height: 1.55;
-    }
-    .success.show{ display:block; }
-
-    .form-grid{
-      display:grid;
-      gap: 12px;
-      grid-template-columns: 1fr;
-    }
-
-    label{
+    .size-ico{
+      width:52px;
+      height:52px;
+      border-radius:16px;
       display:flex;
-      flex-direction: column;
-      gap: 8px;
-      font-weight: 900;
-      color: rgba(255,255,255,.92);
-      font-size: 13px;
-      letter-spacing: -.2px;
+      align-items:center;
+      justify-content:center;
+      background: rgba(255,255,255,.08);
+      border:1px solid rgba(255,255,255,.12);
+      flex:0 0 auto;
     }
 
-    input, select, textarea{
-      width:100%;
-      padding: 14px 14px;
-      border-radius: 18px;
+    .size-ico i{
+      font-size:22px;
+      opacity:.95;
+    }
+
+    .size-name-lg{
+      font-size:20px;
+      font-weight:950;
+      letter-spacing:-.02em;
+      margin:0;
+    }
+
+    .size-desc{
+      margin:6px 0 0;
+      color: rgba(255,255,255,.74);
+      font-weight:650;
+      line-height:1.55;
+    }
+
+    .size-price{
+      margin-top:16px;
+      padding-top:14px;
+      border-top:1px solid rgba(255,255,255,.10);
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:12px;
+    }
+
+    .price-tag{
+      font-size:18px;
+      font-weight:950;
+      letter-spacing:-.02em;
+      white-space:nowrap;
+    }
+
+    .price-tag small{
+      font-size:12px;
+      font-weight:800;
+      opacity:.7;
+      display:block;
+      margin-top:2px;
+    }
+
+    .size-meta{
+      display:flex;
+      flex-wrap:wrap;
+      gap:8px;
+      margin-top:14px;
+    }
+
+    .pill{
+      display:inline-flex;
+      align-items:center;
+      gap:8px;
+      padding:8px 10px;
+      border-radius:999px;
       background: rgba(255,255,255,.06);
-      border: 1px solid rgba(255,255,255,.12);
-      color:#fff;
-      font-weight: 750;
-      outline: none;
-      font-family: inherit;
+      border: 1px solid rgba(255,255,255,.10);
+      color: rgba(255,255,255,.75);
+      font-weight:750;
+      font-size:13px;
     }
 
-    textarea{ min-height: 110px; resize: vertical; }
+    .pill i{ opacity:.9; }
 
-    input::placeholder, textarea::placeholder{
-      color: rgba(255,255,255,.42);
-      font-weight: 650;
+    .loading-price{
+      opacity:.65;
+      font-weight:900;
     }
 
-    .form-actions{
-      display:grid;
-      gap: 12px;
-      margin-top: 14px;
-    }
-
-    .helper{
-      color: rgba(255,255,255,.60);
-      font-weight: 650;
-      font-size: 13px;
-      line-height: 1.5;
-      text-align:center;
-    }
-
-    /* ==========================================================
-       DESKTOP ENHANCEMENTS (opcional)
-       ========================================================== */
-    @media (min-width: 860px){
-      .nav-links{ display:flex; }
-      .menu-btn{ display:none; }
-      .mobile-nav{ display:none !important; }
-
-      .hero-grid{
-        grid-template-columns: .9fr 1.1fr;
-        align-items:center;
-      }
-
-      .hero-actions{
-        display:flex;
-        gap: 12px;
-        align-items:center;
-      }
-
-      .footer-grid{
-        grid-template-columns: 1.2fr .8fr;
-        justify-items:stretch;
-        text-align:left;
-      }
-
-      .footer-col{
-        align-items:flex-start;
-        text-align:left;
-        max-width:none;
-      }
-
-      .footer-socials{
-        justify-content:flex-start;
-      }
-
-      .footer-links{ max-width: 380px; }
-      .helper{ text-align:left; }
+    .error-price{
+      color: rgba(255,110,110,.95);
+      font-weight:900;
     }
   </style>
 </head>
 
 <body>
 
-  <!-- ==========================================================
-       HEADER
-       ========================================================== -->
+  <!-- HEADER -->
   <header>
     <div class="container">
       <div class="nav">
-
         <div class="brand">
-          <img src="assets/logo.png" alt="Piñata Colada" class="brand-logo" />
+          <a href="index.html" aria-label="Inicio">
+            <img src="assets/logo.png" alt="Piñata Colada" class="brand-logo" />
+          </a>
         </div>
 
-        <!-- Desktop links -->
         <nav class="nav-links" aria-label="Secciones">
-          <a href="tamanos.html">Tamaños</a>
-          <a href="galeria.html">Galería</a>
+          <a class="active" href="tamanos.html">Tamaños</a>
+          <a href="catalogo.html">Catálogo</a>
           <a href="preguntas.html">Preguntas</a>
-          <a href="contacto.html">Cotizar</a>
+          <a href="cotizar.html">Cotizar</a>
         </nav>
 
         <div class="nav-cta">
-          <button class="btn btn-primary" id="btnCotizarTop" type="button">
+          <button class="btn btn-ghost" id="btnWhats" type="button">
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
+            </svg>
+            WhatsApp
+          </button>
+
+          <a class="btn btn-primary" href="cotizar.html">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
             </svg>
-            cotizar
-          </button>
+            Realizar cotización
+          </a>
 
           <button class="menu-btn" id="menuBtn" type="button" aria-label="Abrir menú">
             <svg viewBox="0 0 24 24" aria-hidden="true">
@@ -700,38 +179,34 @@
         </div>
       </div>
 
-      <!-- Mobile menu -->
-      <div class="mobile-nav" id="mobileNav" aria-label="Menú móvil">
+      <!-- Menú móvil -->
+      <div class="mobile-nav" id="mobileNav">
         <div class="mobile-links">
-          <a href="tamanos.html">tamaños <span>→</span></a>
-          <a href="galeria.html">galería <span>→</span></a>
-          <a href="preguntas.html">preguntas <span>→</span></a>
-          <a href="contacto.html">cotizar <span>→</span></a>
+          <a class="active" href="tamanos.html">Tamaños <span>→</span></a>
+          <a href="catalogo.html">Catálogo <span>→</span></a>
+          <a href="preguntas.html">Preguntas <span>→</span></a>
+          <a href="cotizar.html">Cotizar <span>→</span></a>
         </div>
 
         <div class="mobile-cta">
           <button class="btn btn-ghost" id="btnWhatsMobile" type="button">
             <svg viewBox="0 0 24 24" aria-hidden="true">
-              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 1 1 12 20Zm4.6-5.7c-.2-.1-1.2-.6-1.4-.7-.2-.1-.4-.1-.6.1-.2.2-.7.7-.8.9-.1.2-.3.2-.5.1-.2-.1-1-.4-1.9-1.2-.7-.6-1.2-1.4-1.3-1.6-.1-.2 0-.4.1-.5l.4-.4c.1-.1.2-.3.3-.4.1-.1.1-.3 0-.5-.1-.1-.6-1.4-.8-1.9-.2-.5-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.4-.2.2-.9.9-.9 2.2s.9 2.5 1 2.7c.1.2 1.8 2.8 4.3 3.9.6.3 1.1.4 1.4.5.6.2 1.1.2 1.5.1.5-.1 1.2-.5 1.4-1 .2-.5.2-1 .1-1.1-.1-.1-.3-.2-.5-.3Z"/>
+              <path fill="#fff" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18a8 8 0 0 1-4.1-1.1l-.3-.2-2.9.8.8-2.8-.2-.3A8 8 0 0 1 12 4a8 8 0 0 1 0 16Z"/>
             </svg>
-            whatsapp
+            Escribir por WhatsApp
           </button>
 
-          <button class="btn btn-primary" id="btnCotizarMobile" type="button">
+          <a class="btn btn-primary" href="cotizar.html">
             <svg viewBox="0 0 24 24" aria-hidden="true">
               <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
             </svg>
-            cotizar ahora
-          </button>
+            Realizar cotización
+          </a>
         </div>
       </div>
-
     </div>
   </header>
 
-  <!-- ==========================================================
-       MAIN
-       ========================================================== -->
   <main>
 
     <!-- HERO -->
@@ -739,76 +214,165 @@
       <div class="container">
         <div class="hero-grid">
 
-          <div class="logo-wrap" aria-label="Logo Piñata Colada">
+          <div class="logo-wrap">
             <div class="logo-inner">
               <img class="logo-img hit" src="assets/logo.png" alt="Logo Piñata Colada" />
             </div>
           </div>
 
           <div>
-            <div class="kicker">hechas a mano • diseños unicos • sorpresa asegurada</div>
-
-            <h1>piñatas personalizadas que se roban el show 🎉</h1>
+            <h1>Tamaños & Precios ✨</h1>
 
             <p class="lead">
-              en <span class="highlight-brand">piñata colada</span> creamos piñatas con un acabado increible,
-              super fotografenicas y listas para tu fiesta.
+              Elige el tamaño ideal para tu fiesta.
               <br><br>
-              elige tamaño, dinos la idea…
-              <br>y nosotros <span class="highlight-magic">hacemos la magia</span>.
+              Los precios se actualizan automáticamente desde nuestro sistema.
             </p>
 
-            <div class="hero-actions">
-              <button class="btn btn-primary" id="btnCotizarHero" type="button">
-                <svg viewBox="0 0 24 24" aria-hidden="true">
-                  <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-                </svg>
-                realizar cotizacion
-              </button>
-
-              <a class="btn btn-ghost" href="galeria.html">
-                ver galeria
-              </a>
-            </div>
-
             <div class="hero-badges">
-              <div class="badge">🎨 personalizadas</div>
-              <div class="badge">🕒 entregas por fecha</div>
-              <div class="badge">📍 irapuato, gto</div>
-              <div class="badge">✨ tematicas: todo</div>
+              <div class="badge">📦 Listas para entregar</div>
+              <div class="badge">🎨 Personalizadas</div>
+              <div class="badge">🕒 A tiempo</div>
+              <div class="badge">✨ Acabado premium</div>
             </div>
           </div>
 
         </div>
+      </div>
+    </section>
 
-        <!-- Quick links -->
-        <div style="margin-top:22px;">
-          <div class="section-title">
-            <h2 class="section-title-highlight">explora rapido</h2>
-            <p>si quieres ir directo a lo importante 😄</p>
-          </div>
+    <!-- TARJETAS -->
+    <section>
+      <div class="container">
+        <div class="section-title">
+          <h2 class="section-title-highlight">Elige tu tamaño</h2>
+          <p>Tarifas claras, diseños hermosos y calidad fotogénica.</p>
+        </div>
 
-          <div class="quick-grid">
-            <a class="quick-card" href="tamanos.html">
-              <b>tamaños</b>
-              <p>conoce s / m / l y diseño a tu tematica</p>
-            </a>
+        <div class="sizes-grid" id="sizesGrid">
 
-            <a class="quick-card" href="galeria.html">
-              <b>galeria</b>
-              <p>fotos de ejemplo (aqui pondras tus fotos reales)</p>
-            </a>
+          <!-- Chica -->
+          <article class="size-card" data-tipo="Chica">
+            <div class="size-top">
+              <div>
+                <h3 class="size-name-lg">Chica</h3>
+                <p class="size-desc">
+                  Ideal para detalles, regalos y fiestas pequeñas.
+                </p>
+              </div>
+              <div class="size-ico">
+                <i class="fi fi-rr-star"></i>
+              </div>
+            </div>
 
-            <a class="quick-card" href="preguntas.html">
-              <b>preguntas</b>
-              <p>tiempos, entregas, pedidos y dudas comunes</p>
-            </a>
+            <div class="size-meta">
+              <span class="pill"><i class="fi fi-rr-sparkles"></i> Personalizada</span>
+              <span class="pill"><i class="fi fi-rr-camera"></i> Fotogénica</span>
+              <span class="pill"><i class="fi fi-rr-box"></i> Compacta</span>
+            </div>
 
-            <a class="quick-card" href="contacto.html">
-              <b>cotizar</b>
-              <p>te toma menos de 1 minuto y genera folio automatico</p>
-            </a>
-          </div>
+            <div class="size-price">
+              <div class="price-tag">
+                <span class="price-value loading-price">Cargando…</span>
+                <small>MXN</small>
+              </div>
+              <a class="btn btn-primary" href="cotizar.html">Cotizar</a>
+            </div>
+          </article>
+
+          <!-- Estándar -->
+          <article class="size-card" data-tipo="Estándar">
+            <div class="size-top">
+              <div>
+                <h3 class="size-name-lg">Estándar</h3>
+                <p class="size-desc">
+                  El tamaño más pedido. Perfecta para la mayoría de fiestas.
+                </p>
+              </div>
+              <div class="size-ico">
+                <i class="fi fi-rr-crown"></i>
+              </div>
+            </div>
+
+            <div class="size-meta">
+              <span class="pill"><i class="fi fi-rr-sparkles"></i> Mejor opción</span>
+              <span class="pill"><i class="fi fi-rr-camera"></i> Muy fotogénica</span>
+              <span class="pill"><i class="fi fi-rr-party-horn"></i> Recomendada</span>
+            </div>
+
+            <div class="size-price">
+              <div class="price-tag">
+                <span class="price-value loading-price">Cargando…</span>
+                <small>MXN</small>
+              </div>
+              <a class="btn btn-primary" href="cotizar.html">Cotizar</a>
+            </div>
+          </article>
+
+          <!-- Premium -->
+          <article class="size-card" data-tipo="Premium">
+            <div class="size-top">
+              <div>
+                <h3 class="size-name-lg">Premium</h3>
+                <p class="size-desc">
+                  Para un impacto WOW. Detalles extra y acabado espectacular.
+                </p>
+              </div>
+              <div class="size-ico">
+                <i class="fi fi-rr-diamond"></i>
+              </div>
+            </div>
+
+            <div class="size-meta">
+              <span class="pill"><i class="fi fi-rr-sparkles"></i> Extra detalles</span>
+              <span class="pill"><i class="fi fi-rr-camera"></i> WOW garantizado</span>
+              <span class="pill"><i class="fi fi-rr-magic-wand"></i> Acabado pro</span>
+            </div>
+
+            <div class="size-price">
+              <div class="price-tag">
+                <span class="price-value loading-price">Cargando…</span>
+                <small>MXN</small>
+              </div>
+              <a class="btn btn-primary" href="cotizar.html">Cotizar</a>
+            </div>
+          </article>
+
+          <!-- Diseño exclusivo -->
+          <article class="size-card" data-tipo="Diseño exclusivo">
+            <div class="size-top">
+              <div>
+                <h3 class="size-name-lg">Diseño exclusivo</h3>
+                <p class="size-desc">
+                  Si tu idea es muy específica o compleja, la hacemos realidad.
+                </p>
+              </div>
+              <div class="size-ico">
+                <i class="fi fi-rr-wand-magic-sparkles"></i>
+              </div>
+            </div>
+
+            <div class="size-meta">
+              <span class="pill"><i class="fi fi-rr-pen-nib"></i> 100% a medida</span>
+              <span class="pill"><i class="fi fi-rr-stars"></i> Única</span>
+              <span class="pill"><i class="fi fi-rr-comments"></i> Cotización especial</span>
+            </div>
+
+            <div class="size-price">
+              <div class="price-tag">
+                <span class="price-value loading-price">Cargando…</span>
+                <small>MXN</small>
+              </div>
+              <a class="btn btn-primary" href="cotizar.html">Cotizar</a>
+            </div>
+          </article>
+
+        </div>
+
+        <div style="margin-top:18px; opacity:.75; font-weight:650; line-height:1.7;">
+          <p style="margin:0;">
+            * Precios base. El costo final puede variar según detalles, materiales y complejidad del diseño.
+          </p>
         </div>
 
       </div>
@@ -816,62 +380,44 @@
 
   </main>
 
-  <!-- ==========================================================
-       FOOTER
-       ========================================================== -->
+  <!-- FOOTER + MODAL (idéntico al index) -->
   <footer class="site-footer">
     <div class="container">
       <div class="footer-grid">
 
         <div class="footer-col">
-          <div>
-            <div class="footer-title">piñata colada</div>
-            <div class="footer-subtitle">piñatas personalizadas • irapuato, gto</div>
-          </div>
+          <div class="footer-title">Piñata Colada</div>
+          <div class="footer-subtitle">Piñatas personalizadas • Irapuato, Gto</div>
 
           <div class="footer-socials">
             <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Facebook">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.03 3.66 9.2 8.44 9.93v-7.03H7.76v-2.9h2.54V9.85c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.77l-.44 2.9h-2.33V22c4.78-.73 8.44-4.9 8.44-9.93Z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M22 12.07C22 6.48 17.52 2 11.93 2S1.86 6.48 1.86 12.07c0 5.03 3.66 9.2 8.44 9.93v-7.03H7.76v-2.9h2.54V9.85c0-2.5 1.49-3.88 3.77-3.88 1.09 0 2.23.2 2.23.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56v1.88h2.77l-.44 2.9h-2.33V22c4.78-.73 8.44-4.9 8.44-9.93Z"/></svg>
             </a>
-
             <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="Instagram">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"/>
-                <path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/>
-                <path d="M17.5 6.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M7.5 2h9A5.5 5.5 0 0 1 22 7.5v9A5.5 5.5 0 0 1 16.5 22h-9A5.5 5.5 0 0 1 2 16.5v-9A5.5 5.5 0 0 1 7.5 2Zm0 2A3.5 3.5 0 0 0 4 7.5v9A3.5 3.5 0 0 0 7.5 20h9a3.5 3.5 0 0 0 3.5-3.5v-9A3.5 3.5 0 0 0 16.5 4h-9Z"/><path d="M12 7a5 5 0 1 1 0 10 5 5 0 0 1 0-10Zm0 2a3 3 0 1 0 0 6 3 3 0 0 0 0-6Z"/><path d="M17.5 6.4a1.1 1.1 0 1 1 0 2.2 1.1 1.1 0 0 1 0-2.2Z"/></svg>
             </a>
-
             <a class="social-btn" href="#" target="_blank" rel="noopener" aria-label="TikTok">
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M16.5 2h-2.9v13.2c0 1.6-1.3 2.8-2.8 2.8-1.6 0-2.8-1.3-2.8-2.8s1.3-2.8 2.8-2.8c.4 0 .8.1 1.1.2V9.1c-.4-.1-.8-.1-1.1-.1-3 0-5.4 2.4-5.4 5.4S7.8 20 10.8 20s5.4-2.4 5.4-5.4V7.7c1.1 1.2 2.6 2 4.3 2.2V7.1c-2.1-.3-3.7-2-4-4.1Z"/>
-              </svg>
+              <svg viewBox="0 0 24 24"><path d="M16.5 2h-2.9v13.2c0 1.6-1.3 2.8-2.8 2.8-1.6 0-2.8-1.3-2.8-2.8s1.3-2.8 2.8-2.8c.4 0 .8.1 1.1.2V9.1c-.4-.1-.8-.1-1.1-.1-3 0-5.4 2.4-5.4 5.4S7.8 20 10.8 20s5.4-2.4 5.4-5.4V7.7c1.1 1.2 2.6 2 4.3 2.2V7.1c-2.1-.3-3.7-2-4-4.1Z"/></svg>
             </a>
           </div>
 
           <div class="footer-copy">
-            © <span id="year"></span> piñata colada. todos los derechos reservados.
+            © <span id="year"></span> Piñata Colada. Todos los derechos reservados.
           </div>
         </div>
 
-        <div class="footer-col">
-          <div class="footer-title-sm">legal</div>
+        <div class="footer-col footer-legal">
+          <div class="footer-title-sm">Legal</div>
 
           <div class="footer-links">
             <button class="footer-link" id="btnTerms" type="button">
-              <svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 1.5V8h4.5L14 3.5ZM8 12h8v2H8v-2Zm0 4h8v2H8v-2Z"/>
-              </svg>
-              <span>terminos y condiciones</span>
+              <svg class="link-ico" viewBox="0 0 24 24"><path d="M6 2h9l5 5v15a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2Zm8 1.5V8h4.5L14 3.5ZM8 12h8v2H8v-2Zm0 4h8v2H8v-2Z"/></svg>
+              <span>Términos y condiciones</span>
             </button>
 
             <button class="footer-link" id="btnPrivacy" type="button">
-              <svg class="link-ico" viewBox="0 0 24 24" aria-hidden="true">
-                <path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/>
-              </svg>
-              <span>aviso de privacidad</span>
+              <svg class="link-ico" viewBox="0 0 24 24"><path d="M12 2a5 5 0 0 0-5 5v3H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8a2 2 0 0 0-2-2h-1V7a5 5 0 0 0-5-5Zm-3 8V7a3 3 0 1 1 6 0v3H9Z"/></svg>
+              <span>Aviso de privacidad</span>
             </button>
           </div>
         </div>
@@ -880,357 +426,97 @@
     </div>
   </footer>
 
-  <!-- ==========================================================
-       MODAL: COTIZACION
-       ========================================================== -->
-  <div class="modal" id="modalCot">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Formulario de cotizacion">
-      <div class="modal-head">
-        <div>
-          <h3>realizar cotizacion</h3>
-          <p>completa la informacion. al enviar, se guardara en google sheets.</p>
-        </div>
-        <button class="x" id="closeCot" aria-label="Cerrar" type="button">×</button>
-      </div>
-
-      <form id="quoteForm">
-        <div class="success" id="successMsg">
-          muchas gracias por tu solicitud, nos pondremos en contacto contigo.
-        </div>
-
-        <div class="form-grid">
-          <label>
-            nombre del cliente
-            <input name="nombre" required placeholder="ej. ana lopez" autocomplete="name" />
-          </label>
-
-          <label>
-            tipo de piñata
-            <select name="tamano" required>
-              <option value="">selecciona…</option>
-              <option value="s-sutil">s - sutil</option>
-              <option value="m-colada">m - colada</option>
-              <option value="l-epica">l - epica</option>
-              <option value="diseno-a-tu-tematica">diseño a tu tematica</option>
-            </select>
-          </label>
-
-          <label>
-            ¿de que sera tu piñata?
-            <input name="tema" required placeholder="ej. personaje, tematica, logo, etc." />
-          </label>
-
-          <label>
-            fecha en que se necesita
-            <input type="date" name="fecha" required />
-          </label>
-
-          <label>
-            tipo de evento
-            <input name="evento" required placeholder="ej. cumpleaños, baby shower…" />
-          </label>
-
-          <label>
-            telefono (10 digitos)
-            <input name="telefono" required placeholder="ej. 4491234567" inputmode="numeric" autocomplete="tel" />
-          </label>
-        </div>
-
-        <label style="margin-top:12px;">
-          detalles extra
-          <textarea name="detalles" required placeholder="colores, referencias, estilo, etc."></textarea>
-        </label>
-
-        <div class="form-actions">
-          <div class="helper">
-            al enviar, se genera un folio automatico tipo <b>cot-0001</b>
-          </div>
-
-          <button class="btn btn-primary" type="submit" id="sendBtn">
-            enviar solicitud
-          </button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <!-- ==========================================================
-       MODAL: LEGAL (terminos / privacidad)
-       ========================================================== -->
   <div class="modal" id="modalLegal">
-    <div class="modal-card" role="dialog" aria-modal="true" aria-label="Contenido legal">
+    <div class="modal-card" role="dialog" aria-modal="true">
       <div class="modal-head">
         <div>
-          <h3 id="legalTitle">legal</h3>
-          <p id="legalSubtitle">informacion importante.</p>
+          <h3 id="legalTitle">Legal</h3>
+          <p id="legalSubtitle">Información importante.</p>
         </div>
-        <button class="x" id="closeLegal" aria-label="Cerrar" type="button">×</button>
+        <button class="x" id="closeLegal" type="button">×</button>
       </div>
-
-      <div style="padding: 16px; color: rgba(255,255,255,.75); font-weight: 650; line-height: 1.7;">
+      <div style="padding:18px; color:rgba(255,255,255,.72); font-weight:650; line-height:1.7;">
         <div id="legalBody"></div>
       </div>
     </div>
   </div>
 
+  <script src="assets/js/main.js"></script>
+
+  <!-- Script específico para leer precios desde Google Sheets -->
   <script>
-    /* ==========================================================
-       1) CONFIGURACION (EDITA SOLO ESTO)
-       ========================================================== */
+    /**
+     * IMPORTANTE:
+     * Para que esto funcione sin backend, necesitas publicar tu Sheet como:
+     * Archivo -> Compartir -> Publicar en la web
+     *
+     * Y usar el endpoint "gviz".
+     */
 
-    const APPS_SCRIPT_WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz96sHgkrokXKph3cPaOsMHeQHmUodxEKK0UhYRPZ6ccZ15mQsDklaAyu37RGqLAyVd/exec";
-    const AUTO_CLOSE_MS = 2500;
+    const SHEET_ID = "1YoPCt6VqYuF0F0d7IG2NWtHHiNpW3R0DQOZ1Dmz2udM";
+    const GID = "915218915";
 
-    const WHATS_NUMBER = "5214491939486";
-    const WHATS_TEXT = encodeURIComponent("hola! quiero una cotizacion para una piñata personalizada");
+    const GVIZ_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vRU7DUJ_4b7T-lJqct_fgxJ_dpYtrVC1XyjVnS2Udhj8ojp8ebicmeFb_hZ7Wok6P_FEInudggQOd29/gviz/tq?gid=915218915&tqx=out:json";
 
-    /* ==========================================================
-       2) HELPERS
-       ========================================================== */
-    const $ = (sel) => document.querySelector(sel);
-    $("#year").textContent = new Date().getFullYear();
+    function moneyMXN(value){
+      // Si dice "depende..." lo mostramos tal cual
+      if (!value) return "—";
+      const s = String(value).trim();
+      if (isNaN(Number(s))) return s;
 
-    function lockScroll(lock){ document.body.style.overflow = lock ? "hidden" : ""; }
-
-    function openModal(modalId){
-      const modal = document.getElementById(modalId);
-      if(!modal) return;
-      modal.classList.add("open");
-      lockScroll(true);
+      return "$" + Number(s).toLocaleString("es-MX");
     }
 
-    function closeModal(modalId){
-      const modal = document.getElementById(modalId);
-      if(!modal) return;
-      modal.classList.remove("open");
-      lockScroll(false);
+    function setCardPrice(tipo, precio){
+      const card = document.querySelector(`.size-card[data-tipo="${tipo}"]`);
+      if (!card) return;
+
+      const el = card.querySelector(".price-value");
+      if (!el) return;
+
+      el.classList.remove("loading-price", "error-price");
+      el.textContent = moneyMXN(precio);
     }
 
-    function closeAllModals(){
-      document.querySelectorAll(".modal.open").forEach(m => m.classList.remove("open"));
-      lockScroll(false);
-    }
-
-    function openWhats(){
-      window.open(`https://wa.me/${WHATS_NUMBER}?text=${WHATS_TEXT}`, "_blank");
-    }
-
-    /* ==========================================================
-       3) MENU MOVIL
-       ========================================================== */
-    const menuBtn = $("#menuBtn");
-    const mobileNav = $("#mobileNav");
-
-    if(menuBtn && mobileNav){
-      menuBtn.addEventListener("click", () => mobileNav.classList.toggle("open"));
-    }
-
-    /* ==========================================================
-       4) BOTONES WHATSAPP
-       ========================================================== */
-    ["btnWhatsMobile"].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.addEventListener("click", openWhats);
-    });
-
-    /* ==========================================================
-       5) BOTONES COTIZAR (abre modal)
-       ========================================================== */
-    ["btnCotizarTop","btnCotizarHero","btnCotizarMobile"].forEach(id => {
-      const el = document.getElementById(id);
-      if(el) el.addEventListener("click", () => openModal("modalCot"));
-    });
-
-    /* ==========================================================
-       6) MODAL LEGAL
-       ========================================================== */
-    const btnTerms = $("#btnTerms");
-    const btnPrivacy = $("#btnPrivacy");
-    const legalTitle = $("#legalTitle");
-    const legalSubtitle = $("#legalSubtitle");
-    const legalBody = $("#legalBody");
-
-    const TERMS_HTML = `
-      <h4 style="margin:0 0 10px; color:#fff;">terminos y condiciones</h4>
-      <p>al solicitar una cotizacion, aceptas que la informacion se use solo para contactarte y dar seguimiento.</p>
-      <p>los tiempos dependen de agenda y complejidad del diseño.</p>
-      <p>para confirmar pedido puede solicitarse anticipo.</p>
-    `;
-
-    const PRIVACY_HTML = `
-      <h4 style="margin:0 0 10px; color:#fff;">aviso de privacidad</h4>
-      <p>tu informacion se usa unicamente para fines de cotizacion y contacto.</p>
-      <p>no compartimos tus datos con terceros.</p>
-      <p>puedes solicitar eliminacion cuando quieras.</p>
-    `;
-
-    if(btnTerms){
-      btnTerms.addEventListener("click", () => {
-        legalTitle.textContent = "terminos y condiciones";
-        legalSubtitle.textContent = "lee esto antes de solicitar.";
-        legalBody.innerHTML = TERMS_HTML;
-        openModal("modalLegal");
+    function setErrorAll(){
+      document.querySelectorAll(".price-value").forEach(el => {
+        el.classList.remove("loading-price");
+        el.classList.add("error-price");
+        el.textContent = "No disponible";
       });
     }
 
-    if(btnPrivacy){
-      btnPrivacy.addEventListener("click", () => {
-        legalTitle.textContent = "aviso de privacidad";
-        legalSubtitle.textContent = "como usamos tu informacion.";
-        legalBody.innerHTML = PRIVACY_HTML;
-        openModal("modalLegal");
-      });
-    }
+    async function loadPrices(){
+      try{
+        const res = await fetch(GVIZ_URL);
+        const text = await res.text();
 
-    /* ==========================================================
-       7) CIERRE MODALES
-       ========================================================== */
-    document.querySelectorAll(".modal").forEach(modal => {
+        // Google devuelve algo tipo: google.visualization.Query.setResponse({...});
+        const json = JSON.parse(text.substring(text.indexOf("{"), text.lastIndexOf("}") + 1));
 
-      modal.addEventListener("click", (e) => {
-        if(e.target === modal){
-          modal.classList.remove("open");
-          lockScroll(false);
-        }
-      });
+        const rows = json.table.rows || [];
 
-      const x = modal.querySelector(".x");
-      if(x){
-        x.addEventListener("click", () => {
-          modal.classList.remove("open");
-          lockScroll(false);
+        // Convertimos tabla a objeto: {tipo: precio}
+        const map = {};
+        rows.forEach(r => {
+          const tipo = r.c?.[0]?.v;
+          const precio = r.c?.[1]?.v;
+          if(tipo) map[String(tipo).trim()] = precio;
         });
+
+        // Aplicar precios
+        setCardPrice("Chica", map["Chica"]);
+        setCardPrice("Estándar", map["Estándar"]);
+        setCardPrice("Premium", map["Premium"]);
+        setCardPrice("Diseño exclusivo", map["Diseño exclusivo"]);
+
+      }catch(e){
+        console.error("Error cargando precios:", e);
+        setErrorAll();
       }
-    });
-
-    document.addEventListener("keydown", (e) => {
-      if(e.key === "Escape") closeAllModals();
-    });
-
-    /* ==========================================================
-       8) FORMULARIO
-       ========================================================== */
-    const quoteForm  = $("#quoteForm");
-    const successMsg = $("#successMsg");
-    const submitBtn  = $("#sendBtn");
-
-    const inputNombre   = quoteForm?.querySelector('[name="nombre"]');
-    const inputTelefono = quoteForm?.querySelector('[name="telefono"]');
-
-    // IMPORTANTE:
-    // - ya NO hacemos mayusculas
-    // - solo limpiamos dobles espacios
-    if(inputNombre){
-      inputNombre.addEventListener("input", () => {
-        inputNombre.value = inputNombre.value.replace(/\s{2,}/g, " ");
-      });
     }
 
-    // telefono: solo 10 digitos
-    if(inputTelefono){
-      inputTelefono.setAttribute("maxlength", "10");
-      inputTelefono.addEventListener("input", () => {
-        let digits = inputTelefono.value.replace(/\D/g, "");
-        digits = digits.slice(0, 10);
-        inputTelefono.value = digits;
-      });
-    }
-
-    if(quoteForm){
-      quoteForm.addEventListener("submit", async (e) => {
-        e.preventDefault();
-
-        if(!APPS_SCRIPT_WEBAPP_URL){
-          alert("falta configurar la url del webapp de apps script.");
-          return;
-        }
-
-        const formData = new FormData(quoteForm);
-
-        const payload = {
-          nombre: (formData.get("nombre") || "").trim(),
-          tamano: (formData.get("tamano") || "").trim(),
-          tema: (formData.get("tema") || "").trim(),
-          fecha: (formData.get("fecha") || "").trim(),
-          evento: (formData.get("evento") || "").trim(),
-          telefono: (formData.get("telefono") || "").trim(),
-          detalles: (formData.get("detalles") || "").trim()
-        };
-
-        // todos obligatorios
-        for(const key in payload){
-          if(!payload[key]){
-            alert("por favor llena todos los campos antes de enviar.");
-            return;
-          }
-        }
-
-        // telefono exacto 10 digitos
-        if(!/^\d{10}$/.test(payload.telefono)){
-          alert("el telefono debe tener exactamente 10 digitos.");
-          inputTelefono?.focus();
-          return;
-        }
-
-        // bloquear boton
-        if(submitBtn){
-          submitBtn.disabled = true;
-          submitBtn.style.opacity = ".65";
-          submitBtn.textContent = "enviando…";
-        }
-
-        if(successMsg) successMsg.classList.remove("show");
-
-        try{
-          const params = new URLSearchParams(payload);
-
-          const res = await fetch(APPS_SCRIPT_WEBAPP_URL, {
-            method: "POST",
-            body: params
-          });
-
-          const text = await res.text();
-          console.log("raw:", text);
-
-          let data;
-          try{
-            data = JSON.parse(text);
-          }catch(e){
-            throw new Error("apps script devolvio algo que no es json.");
-          }
-
-          if(!data.ok){
-            throw new Error(data.error || "error desconocido");
-          }
-
-          // exito
-          if(successMsg){
-            successMsg.innerHTML = `
-              ✅ gracias! recibimos tu cotizacion.<br>
-              <span style="opacity:.85">tu folio es: <b>${data.folio}</b></span><br>
-              <span style="opacity:.75">te contactamos muy pronto.</span>
-            `;
-            successMsg.classList.add("show");
-          }
-
-          quoteForm.reset();
-
-          setTimeout(() => {
-            closeModal("modalCot");
-            if(successMsg) successMsg.classList.remove("show");
-          }, AUTO_CLOSE_MS);
-
-        }catch(err){
-          alert("no se pudo enviar tu cotizacion.\n\n" + err.message);
-        }finally{
-          if(submitBtn){
-            submitBtn.disabled = false;
-            submitBtn.style.opacity = "";
-            submitBtn.textContent = "enviar solicitud";
-          }
-        }
-      });
-    }
+    loadPrices();
   </script>
 
 </body>
