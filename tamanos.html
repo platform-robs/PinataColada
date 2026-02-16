@@ -49,23 +49,6 @@
       margin-bottom:12px;
     }
 
-    .size-ico{
-      width: 52px;
-      height: 52px;
-      /* border-radius: 16px; */
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      /* background: rgba(255, 255, 255, .08); */
-      /* border: 1px solid rgba(255, 255, 255, .12); */
-      flex: 0 0 auto;
-    }
-
-    .size-ico i{
-      font-size:22px;
-      opacity:.95;
-    }
-
     .size-name-lg{
       font-size:20px;
       font-weight:950;
@@ -91,15 +74,66 @@
     }
 
     .size-card{
-  text-align:center;
-}
+      text-align:center;
+      }
+      
+      
+      .size-price{
+        flex-direction:column;
+        text-align:center;
+      }
 
-
-.size-price{
+.size-headline{
+  display:flex;
   flex-direction:column;
+  align-items:center;
   text-align:center;
+  gap:10px;
 }
 
+.size-name-lg{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  gap:10px;
+}
+
+.size-ico-inline{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  width:34px;
+  height:34px;
+  border-radius:999px;
+  background: rgba(255,255,255,.06);
+  border: 1px solid rgba(255,255,255,.12);
+}
+
+.size-ico-inline i{
+  font-size:16px;
+  opacity:.95;
+}
+
+.size-measures{
+  margin-top:4px;
+  font-weight:850;
+  opacity:.9;
+  font-size:14px;
+  padding:8px 12px;
+  border-radius:999px;
+  background: rgba(255,255,255,.05);
+  border: 1px solid rgba(255,255,255,.10);
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  gap:6px;
+}
+
+.size-measures strong{
+  font-weight:950;
+}
+
+    
 
     .price-tag{
       font-size:18px;
@@ -237,17 +271,21 @@
           <!-- Chica -->
           <article class="size-card" data-tipo="Chica">
             <div class="size-top">
-              <div>
-                <h3 class="size-name-lg">Sutil</h3>
+              <div class="size-headline">
+                <h3 class="size-name-lg">
+                  <span class="size-ico-inline"><i class="fi fi-rr-star"></i></span>
+                  Sutil
+                </h3>
+            
                 <p class="size-desc">
                   Ideal para detalles, regalos y fiestas pequeñas.
                 </p>
-              </div>
-              <div class="size-ico">
-                <i class="fi fi-rr-star"></i>
+            
+                <div class="size-measures">
+                  aprox. <strong>35–45 cm</strong>
+                </div>
               </div>
             </div>
-
             <div class="size-meta">
               <span class="pill"><i class="fi fi-rr-sparkles"></i> Personalizada</span>
               <span class="pill"><i class="fi fi-rr-camera"></i> Fotogénica</span>
@@ -266,16 +304,22 @@
           <!-- Estándar -->
           <article class="size-card" data-tipo="Estándar">
             <div class="size-top">
-              <div>
-                <h3 class="size-name-lg">Colada</h3>
+              <div class="size-headline">
+                <h3 class="size-name-lg">
+                  <span class="size-ico-inline"><i class="fi fi-rr-crown"></i></span>
+                  Colada
+                </h3>
+            
                 <p class="size-desc">
                   El tamaño más pedido. Perfecta para la mayoría de fiestas.
                 </p>
-              </div>
-              <div class="size-ico">
-                <i class="fi fi-rr-crown"></i>
+            
+                <div class="size-measures">
+                  aprox. <strong>50–60 cm</strong>
+                </div>
               </div>
             </div>
+
 
             <div class="size-meta">
               <span class="pill"><i class="fi fi-rr-sparkles"></i> Mejor opción</span>
@@ -295,16 +339,22 @@
           <!-- Premium -->
           <article class="size-card" data-tipo="Premium">
             <div class="size-top">
-              <div>
-                <h3 class="size-name-lg">Epica</h3>
+              <div class="size-headline">
+                <h3 class="size-name-lg">
+                  <span class="size-ico-inline"><i class="fi fi-rr-diamond"></i></span>
+                  Epica
+                </h3>
+            
                 <p class="size-desc">
                   Para un impacto WOW. Detalles extra y acabado espectacular.
                 </p>
-              </div>
-              <div class="size-ico">
-                <i class="fi fi-rr-diamond"></i>
+            
+                <div class="size-measures">
+                  aprox. <strong>70–90 cm</strong>
+                </div>
               </div>
             </div>
+
 
             <div class="size-meta">
               <span class="pill"><i class="fi fi-rr-sparkles"></i> Extra detalles</span>
@@ -323,18 +373,23 @@
 
           <!-- Diseño exclusivo -->
           <article class="size-card" data-tipo="Diseño exclusivo">
-            <i class="fi fi-rr-crown"></i>
-            <div class="size-top">
-              <div>
-                <h3 class="size-name-lg">Diseño a tu temática</h3>
-                <p class="size-desc">
-                  Si tu idea es muy específica o compleja, la hacemos realidad.
-                </p>
+              <div class="size-top">
+                <div class="size-headline">
+                  <h3 class="size-name-lg">
+                    <span class="size-ico-inline"><i class="fi fi-rr-wand-magic-sparkles"></i></span>
+                    Diseño a tu temática
+                  </h3>
+              
+                  <p class="size-desc">
+                    Si tu idea es muy específica o compleja, la hacemos realidad.
+                  </p>
+              
+                  <div class="size-measures">
+                    aprox. <strong>a medida</strong>
+                  </div>
+                </div>
               </div>
-              <div class="size-ico">
-                <i class="fi fi-rr-wand-magic-sparkles"></i>
-              </div>
-            </div>
+
 
             <div class="size-meta">
               <span class="pill"><i class="fi fi-rr-pen-nib"></i> 100% a medida</span>
