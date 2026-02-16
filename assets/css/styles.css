@@ -278,6 +278,7 @@ h1 {
   flex-wrap:wrap;
   gap:10px;
   margin-top:16px;
+  justify-content: space-evenly;
 }
 
 .badge{
