@@ -233,6 +233,18 @@
     </div>
   </div>
 
+  <script>
+  const menuBtn = document.getElementById("menuBtn");
+  const mobileNav = document.getElementById("mobileNav");
+
+  if(menuBtn && mobileNav){
+    menuBtn.addEventListener("click", () => {
+      mobileNav.classList.toggle("show");
+    });
+  }
+</script>
+
+
   <script src="assets/js/main.js"></script>
 </body>
 </html>
