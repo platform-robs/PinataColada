@@ -711,7 +711,7 @@ textarea{ min-height: 130px; resize: vertical; }
 
   .nav-links{ display:none; }
   .menu-btn{ display:inline-flex; align-items:center; justify-content:center; }
-
+}
 
 @media (max-width: 560px){
   .container{ width: min(1180px, calc(100% - 28px)); }
