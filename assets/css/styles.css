@@ -34,6 +34,7 @@ img{ max-width:100%; display:block; }
 .container{
   width:min(1180px, calc(100% - 40px));
   margin:0 auto;
+  text-align: center;
 }
 
 /* ---------- Header ---------- */
