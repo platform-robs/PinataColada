@@ -260,16 +260,24 @@
     </div>
   </div>
 
-  <script>
+<script>
   const menuBtn = document.getElementById("menuBtn");
   const mobileNav = document.getElementById("mobileNav");
 
   if(menuBtn && mobileNav){
     menuBtn.addEventListener("click", () => {
-      mobileNav.classList.toggle("show");
+      mobileNav.classList.toggle("open");
+    });
+
+    // cerrar al tocar un link
+    mobileNav.querySelectorAll("a").forEach(a=>{
+      a.addEventListener("click", ()=>{
+        mobileNav.classList.remove("open");
+      });
     });
   }
 </script>
+
 
 
   <script src="assets/js/main.js"></script>
