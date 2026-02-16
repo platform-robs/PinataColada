@@ -660,3 +660,63 @@ textarea{ min-height: 130px; resize: vertical; }
   .form .row{ grid-template-columns: 1fr; }
   .track img{ width: 170px; height: 170px; }
 }
+
+/* ==========================================================
+   FIX NAV MOBILE (NO se descompone el header)
+   ========================================================== */
+
+@media (max-width: 980px){
+
+  /* El header se vuelve grid: logo | espacio | menú */
+  .nav{
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 12px;
+  }
+
+  /* Ocultamos links normales (ya lo haces, pero lo reforzamos) */
+  .nav-links{
+    display: none !important;
+  }
+
+  /* CTA NO rompe el header */
+  .nav-cta{
+    display: flex;
+    justify-content: flex-end;
+    gap: 10px;
+  }
+
+  /* CLAVE: los botones del header NO deben ser 100% */
+  .nav-cta .btn{
+    width: auto !important;
+    height: 44px;
+    padding: 0 14px;
+    border-radius: 16px;
+    font-size: 14px;
+  }
+
+  /* Hamburger bien */
+  .menu-btn{
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 44px;
+    height: 44px;
+    border-radius: 16px;
+  }
+}
+
+@media (max-width: 560px){
+
+  /* En teléfono chico quitamos botones del header */
+  .nav-cta{
+    display: none;
+  }
+
+  /* Los botones se quedan en el menú desplegable */
+  .mobile-cta .btn{
+    width: 100%;
+  }
+}
+
