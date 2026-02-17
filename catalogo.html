@@ -11,90 +11,185 @@
   <style>
 
 /* =========================
-   CATALOGO TEMATICAS
+   CATALOGO - ACORDEON LIMPIO
 ========================= */
 
 .catalog-hint{
   margin-top: 10px;
-  font-weight: 900;
+  font-weight: 850;
   color: rgba(255,255,255,.65);
   font-size: 13px;
 }
 
 .catalog-themes{
   display: grid;
-  gap: 22px;
+  gap: 14px;
 }
 
-.theme-block{
-  display: grid;
-  gap: 12px;
-  padding: 18px;
-  border-radius: var(--radius);
-  border: var(--border);
-  background: linear-gradient(180deg, rgba(255,255,255,.04), rgba(255,255,255,.02));
-  box-shadow: var(--shadow);
+/* Tarjeta temática */
+.theme-item{
+  border-radius: 22px;
+  border: 1px solid rgba(255,255,255,.10);
+  background: rgba(255,255,255,.03);
+  overflow: hidden;
+  box-shadow: 0 14px 40px rgba(0,0,0,.25);
+  position: relative;
 }
 
-.theme-head{
-  display: grid;
-  gap: 6px;
+/* Glow sutil */
+.theme-item::before{
+  content:"";
+  position:absolute;
+  inset:-2px;
+  background: radial-gradient(600px 120px at 20% 0%,
+    rgba(255,79,166,.18),
+    rgba(255,210,77,.08),
+    transparent 55%);
+  opacity: .85;
+  pointer-events:none;
+}
+
+.theme-btn{
+  width: 100%;
+  padding: 16px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
   text-align: left;
+  position: relative;
+  z-index: 2;
+}
+
+.theme-left{
+  display:flex;
+  align-items:flex-start;
+  gap: 12px;
+  min-width: 0;
+}
+
+.theme-dot{
+  width: 10px;
+  height: 10px;
+  border-radius: 999px;
+  margin-top: 7px;
+  background: linear-gradient(135deg, var(--pink), var(--yellow));
+  box-shadow: 0 0 12px rgba(255,79,166,.35);
+  flex: 0 0 auto;
+}
+
+.theme-text{
+  min-width: 0;
 }
 
 .theme-title{
-  margin: 0;
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 950;
   letter-spacing: -.2px;
+  margin: 0;
+  text-transform: lowercase;
 }
 
 .theme-sub{
-  margin: 0;
-  color: rgba(255,255,255,.72);
+  margin-top: 4px;
+  font-size: 13px;
   font-weight: 650;
-  line-height: 1.5;
+  color: rgba(255,255,255,.70);
+  line-height: 1.45;
 }
 
-.theme-marquee{
-  padding: 12px;
+.theme-right{
+  display:flex;
+  align-items:center;
+  gap: 10px;
+  flex: 0 0 auto;
 }
 
-/* carruseles mas suaves */
-.theme-marquee .track img{
-  width: 190px;
-  height: 190px;
-  border-radius: 22px;
-}
-
-/* cierre */
-.catalog-close{
-  margin-top: 8px;
-  padding: 18px;
-  border-radius: var(--radius);
-  border: var(--border);
-  background: rgba(255,255,255,.03);
-  text-align: center;
-}
-
-.catalog-close p{
-  margin: 0;
-  font-weight: 850;
-  line-height: 1.55;
+.theme-pill{
+  font-size: 12px;
+  font-weight: 900;
+  padding: 7px 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(255,255,255,.12);
+  background: rgba(0,0,0,.25);
   color: rgba(255,255,255,.85);
 }
 
-.catalog-actions{
-  margin-top: 14px;
-  display: grid;
-  gap: 10px;
+.theme-chevron{
+  font-size: 16px;
+  font-weight: 900;
+  opacity: .8;
+  transform: translateY(-1px);
+  transition: transform .25s ease, opacity .25s ease;
 }
 
-@media (min-width: 700px){
-  .catalog-actions{
-    display: flex;
-    justify-content: center;
-    gap: 12px;
+/* Panel desplegable */
+.theme-panel{
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height .35s ease;
+  position: relative;
+  z-index: 2;
+}
+
+/* Cuando está abierto */
+.theme-item.open .theme-panel{
+  max-height: 520px; /* suficiente para móvil */
+}
+
+.theme-item.open .theme-chevron{
+  transform: rotate(180deg);
+  opacity: 1;
+}
+
+/* Galería */
+.theme-gallery{
+  padding: 0 16px 16px 16px;
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.theme-gallery::-webkit-scrollbar{
+  height: 8px;
+}
+
+.theme-gallery::-webkit-scrollbar-thumb{
+  background: rgba(255,255,255,.12);
+  border-radius: 999px;
+}
+
+.theme-gallery img{
+  width: 210px;
+  height: 210px;
+  flex: 0 0 auto;
+  border-radius: 18px;
+  object-fit: cover;
+  scroll-snap-align: start;
+  border: 1px solid rgba(255,255,255,.10);
+  box-shadow: 0 12px 30px rgba(0,0,0,.25);
+  transition: transform .25s ease;
+}
+
+.theme-gallery img:active{
+  transform: scale(.98);
+}
+
+/* PC: no se vea gigante */
+@media (min-width: 900px){
+  .theme-gallery img{
+    width: 240px;
+    height: 240px;
+  }
+
+  .theme-item.open .theme-panel{
+    max-height: 420px;
   }
 }
 
@@ -210,181 +305,197 @@
     </section>
 
     <section>
-<!-- =========================
-     TEMATICAS (CATALOGO)
-========================= -->
-<div class="catalog-themes">
 
-  <div class="section-title">
-    <h2 class="section-title-highlight">Catálogo por vibes</h2>
-    <p>Un carrusel de ideas para que elijas tu favorita 
-      o diseñamos una nueva para ti.</p>
-    <div class="catalog-hint">→ desliza para ver ejemplos →</div>
-  </div>
 
-  <!-- 1) INFANTILES -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">infantiles</h3>
-      <p class="theme-sub">personajes, colores y mucha fiesta</p>
-    </div>
 
-    <div class="marquee theme-marquee">
-      <div class="track" id="kidsTrack">
-        <!-- Repite tus imágenes 2 veces para loop infinito -->
-        <img src="assets/catalogo/infantiles/1.jpg" alt="Piñata infantil 1">
-        <img src="assets/catalogo/infantiles/2.jpg" alt="Piñata infantil 2">
-        <img src="assets/catalogo/infantiles/3.jpg" alt="Piñata infantil 3">
-        <img src="assets/catalogo/infantiles/4.jpg" alt="Piñata infantil 4">
-        <img src="assets/catalogo/infantiles/5.jpg" alt="Piñata infantil 5">
-
-        <img src="assets/catalogo/infantiles/1.jpg" alt="Piñata infantil 1 duplicada">
-        <img src="assets/catalogo/infantiles/2.jpg" alt="Piñata infantil 2 duplicada">
-        <img src="assets/catalogo/infantiles/3.jpg" alt="Piñata infantil 3 duplicada">
-        <img src="assets/catalogo/infantiles/4.jpg" alt="Piñata infantil 4 duplicada">
-        <img src="assets/catalogo/infantiles/5.jpg" alt="Piñata infantil 5 duplicada">
+      <!-- =========================
+           TEMATICAS (CATALOGO) - ACORDEON + CARRUSEL
+      ========================= -->
+      
+      <div class="catalog-themes">
+      
+        <div class="section-title">
+          <h2 class="section-title-highlight">Catálogo por vibes</h2>
+          <p>Un carrusel de ideas para que elijas tu favorita o diseñamos una nueva para ti.</p>
+          <div class="catalog-hint">toca una temática para ver ejemplos</div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">infantiles</div>
+                <div class="theme-sub">personajes, colores y mucha fiesta</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/infantiles/1.jpg" alt="Piñata infantil 1">
+              <img src="assets/catalogo/infantiles/2.jpg" alt="Piñata infantil 2">
+              <img src="assets/catalogo/infantiles/3.jpg" alt="Piñata infantil 3">
+              <img src="assets/catalogo/infantiles/4.jpg" alt="Piñata infantil 4">
+              <img src="assets/catalogo/infantiles/5.jpg" alt="Piñata infantil 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">adultos</div>
+                <div class="theme-sub">elegante, divertido o con mood de antro</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/adultos/1.jpg" alt="Piñata adultos 1">
+              <img src="assets/catalogo/adultos/2.jpg" alt="Piñata adultos 2">
+              <img src="assets/catalogo/adultos/3.jpg" alt="Piñata adultos 3">
+              <img src="assets/catalogo/adultos/4.jpg" alt="Piñata adultos 4">
+              <img src="assets/catalogo/adultos/5.jpg" alt="Piñata adultos 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">dias festivos</div>
+                <div class="theme-sub">navidad, halloween, san valentin y mas</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/festivos/1.jpg" alt="Piñata festiva 1">
+              <img src="assets/catalogo/festivos/2.jpg" alt="Piñata festiva 2">
+              <img src="assets/catalogo/festivos/3.jpg" alt="Piñata festiva 3">
+              <img src="assets/catalogo/festivos/4.jpg" alt="Piñata festiva 4">
+              <img src="assets/catalogo/festivos/5.jpg" alt="Piñata festiva 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">para eventos</div>
+                <div class="theme-sub">bautizo, xv, boda, baby shower y mas</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/eventos/1.jpg" alt="Piñata para evento 1">
+              <img src="assets/catalogo/eventos/2.jpg" alt="Piñata para evento 2">
+              <img src="assets/catalogo/eventos/3.jpg" alt="Piñata para evento 3">
+              <img src="assets/catalogo/eventos/4.jpg" alt="Piñata para evento 4">
+              <img src="assets/catalogo/eventos/5.jpg" alt="Piñata para evento 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">disenos especiales</div>
+                <div class="theme-sub">formas raras, 3d, detalles locos</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/especiales/1.jpg" alt="Piñata especial 1">
+              <img src="assets/catalogo/especiales/2.jpg" alt="Piñata especial 2">
+              <img src="assets/catalogo/especiales/3.jpg" alt="Piñata especial 3">
+              <img src="assets/catalogo/especiales/4.jpg" alt="Piñata especial 4">
+              <img src="assets/catalogo/especiales/5.jpg" alt="Piñata especial 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- ITEM -->
+        <div class="theme-item" data-theme>
+          <button class="theme-btn" type="button" aria-expanded="false">
+            <div class="theme-left">
+              <div class="theme-dot"></div>
+              <div class="theme-text">
+                <div class="theme-title">a tu tematica</div>
+                <div class="theme-sub">dinos tu idea y lo hacemos realidad</div>
+              </div>
+            </div>
+            <div class="theme-right">
+              <span class="theme-pill">ver</span>
+              <span class="theme-chevron">⌄</span>
+            </div>
+          </button>
+      
+          <div class="theme-panel">
+            <div class="theme-gallery">
+              <img src="assets/catalogo/atu/1.jpg" alt="Piñata a tu temática 1">
+              <img src="assets/catalogo/atu/2.jpg" alt="Piñata a tu temática 2">
+              <img src="assets/catalogo/atu/3.jpg" alt="Piñata a tu temática 3">
+              <img src="assets/catalogo/atu/4.jpg" alt="Piñata a tu temática 4">
+              <img src="assets/catalogo/atu/5.jpg" alt="Piñata a tu temática 5">
+            </div>
+          </div>
+        </div>
+      
+        <!-- CIERRE (dejas el tuyo igual) -->
+        <div class="catalog-close">
+          <p>Tu temática no tiene límites. <span class="highlight-brand">Solo dinos qué sueñas.</span></p>
+          <div class="catalog-actions">
+            <a class="btn btn-primary" href="cotizar.html">realizar cotizacion</a>
+            <a class="btn btn-ghost" href="tamanos.html">ver tamanos</a>
+          </div>
+        </div>
+      
       </div>
-    </div>
-  </div>
 
-  <!-- 2) ADULTOS -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">adultos</h3>
-      <p class="theme-sub">elegante, divertido o con mood de antro</p>
-    </div>
 
-    <div class="marquee theme-marquee">
-      <div class="track" id="adultTrack">
-        <img src="assets/catalogo/adultos/1.jpg" alt="Piñata adultos 1">
-        <img src="assets/catalogo/adultos/2.jpg" alt="Piñata adultos 2">
-        <img src="assets/catalogo/adultos/3.jpg" alt="Piñata adultos 3">
-        <img src="assets/catalogo/adultos/4.jpg" alt="Piñata adultos 4">
-        <img src="assets/catalogo/adultos/5.jpg" alt="Piñata adultos 5">
 
-        <img src="assets/catalogo/adultos/1.jpg" alt="Piñata adultos 1 duplicada">
-        <img src="assets/catalogo/adultos/2.jpg" alt="Piñata adultos 2 duplicada">
-        <img src="assets/catalogo/adultos/3.jpg" alt="Piñata adultos 3 duplicada">
-        <img src="assets/catalogo/adultos/4.jpg" alt="Piñata adultos 4 duplicada">
-        <img src="assets/catalogo/adultos/5.jpg" alt="Piñata adultos 5 duplicada">
-      </div>
-    </div>
-  </div>
-
-  <!-- 3) DIAS FESTIVOS -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">dias festivos</h3>
-      <p class="theme-sub">navidad, halloween, san valentin y mas</p>
-    </div>
-
-    <div class="marquee theme-marquee">
-      <div class="track" id="festTrack">
-        <img src="assets/catalogo/festivos/1.jpg" alt="Piñata festiva 1">
-        <img src="assets/catalogo/festivos/2.jpg" alt="Piñata festiva 2">
-        <img src="assets/catalogo/festivos/3.jpg" alt="Piñata festiva 3">
-        <img src="assets/catalogo/festivos/4.jpg" alt="Piñata festiva 4">
-        <img src="assets/catalogo/festivos/5.jpg" alt="Piñata festiva 5">
-
-        <img src="assets/catalogo/festivos/1.jpg" alt="Piñata festiva 1 duplicada">
-        <img src="assets/catalogo/festivos/2.jpg" alt="Piñata festiva 2 duplicada">
-        <img src="assets/catalogo/festivos/3.jpg" alt="Piñata festiva 3 duplicada">
-        <img src="assets/catalogo/festivos/4.jpg" alt="Piñata festiva 4 duplicada">
-        <img src="assets/catalogo/festivos/5.jpg" alt="Piñata festiva 5 duplicada">
-      </div>
-    </div>
-  </div>
-
-  <!-- 4) PARA EVENTOS -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">para eventos</h3>
-      <p class="theme-sub">bautizo, xv, boda, baby shower y mas</p>
-    </div>
-
-    <div class="marquee theme-marquee">
-      <div class="track" id="eventTrack">
-        <img src="assets/catalogo/eventos/1.jpg" alt="Piñata para evento 1">
-        <img src="assets/catalogo/eventos/2.jpg" alt="Piñata para evento 2">
-        <img src="assets/catalogo/eventos/3.jpg" alt="Piñata para evento 3">
-        <img src="assets/catalogo/eventos/4.jpg" alt="Piñata para evento 4">
-        <img src="assets/catalogo/eventos/5.jpg" alt="Piñata para evento 5">
-
-        <img src="assets/catalogo/eventos/1.jpg" alt="Piñata para evento 1 duplicada">
-        <img src="assets/catalogo/eventos/2.jpg" alt="Piñata para evento 2 duplicada">
-        <img src="assets/catalogo/eventos/3.jpg" alt="Piñata para evento 3 duplicada">
-        <img src="assets/catalogo/eventos/4.jpg" alt="Piñata para evento 4 duplicada">
-        <img src="assets/catalogo/eventos/5.jpg" alt="Piñata para evento 5 duplicada">
-      </div>
-    </div>
-  </div>
-
-  <!-- 5) DISENOS ESPECIALES -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">disenos especiales</h3>
-      <p class="theme-sub">formas raras, 3d, detalles locos</p>
-    </div>
-
-    <div class="marquee theme-marquee">
-      <div class="track" id="specialTrack">
-        <img src="assets/catalogo/especiales/1.jpg" alt="Piñata especial 1">
-        <img src="assets/catalogo/especiales/2.jpg" alt="Piñata especial 2">
-        <img src="assets/catalogo/especiales/3.jpg" alt="Piñata especial 3">
-        <img src="assets/catalogo/especiales/4.jpg" alt="Piñata especial 4">
-        <img src="assets/catalogo/especiales/5.jpg" alt="Piñata especial 5">
-
-        <img src="assets/catalogo/especiales/1.jpg" alt="Piñata especial 1 duplicada">
-        <img src="assets/catalogo/especiales/2.jpg" alt="Piñata especial 2 duplicada">
-        <img src="assets/catalogo/especiales/3.jpg" alt="Piñata especial 3 duplicada">
-        <img src="assets/catalogo/especiales/4.jpg" alt="Piñata especial 4 duplicada">
-        <img src="assets/catalogo/especiales/5.jpg" alt="Piñata especial 5 duplicada">
-      </div>
-    </div>
-  </div>
-
-  <!-- 6) A TU TEMATICA -->
-  <div class="theme-block">
-    <div class="theme-head">
-      <h3 class="theme-title">a tu tematica</h3>
-      <p class="theme-sub">dinos tu idea y lo hacemos realidad</p>
-    </div>
-
-    <div class="marquee theme-marquee">
-      <div class="track" id="customTrack">
-        <img src="assets/catalogo/atu/1.jpg" alt="Piñata a tu temática 1">
-        <img src="assets/catalogo/atu/2.jpg" alt="Piñata a tu temática 2">
-        <img src="assets/catalogo/atu/3.jpg" alt="Piñata a tu temática 3">
-        <img src="assets/catalogo/atu/4.jpg" alt="Piñata a tu temática 4">
-        <img src="assets/catalogo/atu/5.jpg" alt="Piñata a tu temática 5">
-
-        <img src="assets/catalogo/atu/1.jpg" alt="Piñata a tu temática 1 duplicada">
-        <img src="assets/catalogo/atu/2.jpg" alt="Piñata a tu temática 2 duplicada">
-        <img src="assets/catalogo/atu/3.jpg" alt="Piñata a tu temática 3 duplicada">
-        <img src="assets/catalogo/atu/4.jpg" alt="Piñata a tu temática 4 duplicada">
-        <img src="assets/catalogo/atu/5.jpg" alt="Piñata a tu temática 5 duplicada">
-      </div>
-    </div>
-  </div>
-
-  <!-- CIERRE -->
-  <div class="catalog-close">
-    <p>Tu temática no tiene límites. <span class="highlight-brand">Solo dinos qué sueñas.</span></p>
-    <div class="catalog-actions">
-      <a class="btn btn-primary" href="cotizar.html">
-        <svg viewBox="0 0 24 24" aria-hidden="true">
-          <path fill="#111" d="M12 2l1.4 5.1L18.5 9l-5.1 1.4L12 15.5l-1.4-5.1L5.5 9l5.1-1.9L12 2Zm7 11l.9 3.2 3.1.8-3.1.9-.9 3.1-.9-3.1-3.1-.9 3.1-.8.9-3.2Z"/>
-        </svg>
-        realizar cotizacion
-      </a>
-
-      <a class="btn btn-ghost" href="tamanos.html">
-        ver tamanos
-      </a>
-    </div>
-  </div>
-
-</div>
+      
     </section>
 
   </main>
@@ -470,6 +581,33 @@
   }
 </script>
 
+<script>
+  // =========================
+  // CATALOGO: ACORDEON (solo 1 abierto)
+  // =========================
+  const themes = document.querySelectorAll("[data-theme]");
+
+  themes.forEach(item => {
+    const btn = item.querySelector(".theme-btn");
+
+    btn.addEventListener("click", () => {
+      const isOpen = item.classList.contains("open");
+
+      // cerrar todos
+      themes.forEach(i => {
+        i.classList.remove("open");
+        const b = i.querySelector(".theme-btn");
+        if(b) b.setAttribute("aria-expanded", "false");
+      });
+
+      // si no estaba abierto, abrirlo
+      if(!isOpen){
+        item.classList.add("open");
+        btn.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+</script>
 
 
   <script src="assets/js/main.js"></script>
