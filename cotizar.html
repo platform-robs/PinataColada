@@ -418,7 +418,7 @@
 </main>
 
 <script>
-  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz4inSMWegGyet4EqqBWmWlzV9ZAu0Y-BPtS5ogpN9Mm8Y1Atc61GklU83OPvwqxlL4/exec";
+  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbzx_o5IOHuvNjwk9MYLN9qrcjjLsHhBYnQqfM613R1UjMg5XaJXYOC7tfSbOJPQoqXt/exec";
 
   const form = document.getElementById("formCotizacion");
   const statusBox = document.getElementById("statusBox");
@@ -490,8 +490,10 @@
 
       const resp = await fetch(WEBAPP_URL, {
         method: "POST",
-        body: fd
+        body: fd,
+        redirect: "follow"
       });
+
 
       const text = await resp.text();
 
@@ -513,7 +515,7 @@
     } catch (err) {
       console.error(err);
       setLoading(false);
-      showStatus("Ocurrió un error al enviar. Intenta otra vez o escríbenos por WhatsApp.", false);
+      showStatus("Error: " + err.message, false);
     }
   });
 </script>
