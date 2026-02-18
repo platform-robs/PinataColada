@@ -418,6 +418,8 @@
 </main>
 
 <script>
+  const WEBAPP_URL = "https://script.google.com/macros/s/AKfycbz4inSMWegGyet4EqqBWmWlzV9ZAu0Y-BPtS5ogpN9Mm8Y1Atc61GklU83OPvwqxlL4/exec";
+
   const form = document.getElementById("formCotizacion");
   const statusBox = document.getElementById("statusBox");
   const btnEnviar = document.getElementById("btnEnviar");
@@ -437,31 +439,31 @@
     telefono.value = telefono.value.replace(/\D/g, "").slice(0, 10);
   });
 
-  function showStatus(msg, ok=true){
+  function showStatus(msg, ok = true) {
     statusBox.className = "status show " + (ok ? "ok" : "bad");
     statusBox.innerHTML = msg;
   }
 
-  function setLoading(on){
-    if(on){
+  function setLoading(on) {
+    if (on) {
       btnEnviar.disabled = true;
       btnEnviar.innerHTML = `<span class="spinner"></span> enviando...`;
-    }else{
+    } else {
       btnEnviar.disabled = false;
       btnEnviar.innerHTML = `enviar cotización`;
     }
   }
 
-  function isValidPhoneMX(phone){
-    const clean = String(phone).replace(/\D/g,"");
+  function isValidPhoneMX(phone) {
+    const clean = String(phone).replace(/\D/g, "");
     return clean.length === 10;
   }
 
-  form.addEventListener("submit", (e) => {
+  form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
     const data = {
-      cliente: document.getElementById("cliente").value.trim(),
+      cliente: document.getElementById("cliente").value.trim().toUpperCase(),
       telefono: document.getElementById("telefono").value.trim(),
       tamano: document.getElementById("tamano").value,
       diseno: document.getElementById("diseno").value.trim(),
@@ -473,7 +475,7 @@
       ubicacion: document.getElementById("ubicacion").value.trim()
     };
 
-    if(!isValidPhoneMX(data.telefono)){
+    if (!isValidPhoneMX(data.telefono)) {
       showStatus("El teléfono debe tener 10 dígitos (México).", false);
       return;
     }
@@ -481,20 +483,41 @@
     setLoading(true);
     showStatus("Enviando tu cotización… ✨", true);
 
-    google.script.run
-      .withSuccessHandler(res => {
-        setLoading(false);
-        showStatus(`¡Listo! 🎉 Tu folio es <b>${res.folio}</b>. En breve te contactamos.`, true);
-        form.reset();
-      })
-      .withFailureHandler(err => {
-        setLoading(false);
-        showStatus("Ocurrió un error al enviar. Intenta otra vez o escríbenos por WhatsApp.", false);
-        console.error(err);
-      })
-      .enviarCotizacion(data);
+    try {
+      // Mandamos como FormData (lo más compatible con Apps Script)
+      const fd = new FormData();
+      Object.entries(data).forEach(([k, v]) => fd.append(k, v));
+
+      const resp = await fetch(WEBAPP_URL, {
+        method: "POST",
+        body: fd
+      });
+
+      const text = await resp.text();
+
+      let json;
+      try {
+        json = JSON.parse(text);
+      } catch (err) {
+        throw new Error("Respuesta inválida del servidor: " + text);
+      }
+
+      if (!json.ok) {
+        throw new Error(json.error || "Error desconocido.");
+      }
+
+      setLoading(false);
+      showStatus(`¡Listo! 🎉 Tu folio es <b>${json.folio}</b>. En breve te contactamos.`, true);
+      form.reset();
+
+    } catch (err) {
+      console.error(err);
+      setLoading(false);
+      showStatus("Ocurrió un error al enviar. Intenta otra vez o escríbenos por WhatsApp.", false);
+    }
   });
 </script>
+
 
 </body>
 </html>
