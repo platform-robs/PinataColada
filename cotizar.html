@@ -10,13 +10,50 @@
 
   <!-- Estilos EXTRA SOLO para el formulario (no rompen tu CSS global) -->
   <style>
-
+    
     /* =================================
-       ANIMACIÓN EXPANSIÓN FORMULARIO
+       FORM COLAPSABLE PROFESIONAL
     ================================= */
     
-   .quote-card-body{
+    .quote-card{
+      transition: box-shadow .3s ease, transform .3s ease;
+    }
+    
+    .quote-card-head{
+      cursor: pointer;
+      transition: background .3s ease;
+    }
+    
+    .quote-card-head:hover{
+      background: rgba(255,255,255,.05);
+    }
+    
+    .quote-card-body{
+      padding: 0 16px;
+      max-height: 0;
+      overflow: hidden;
+      opacity: 0;
+      transition: max-height .5s ease, opacity .4s ease, padding .3s ease;
+    }
+    
+    /* ESTADO ABIERTO */
+    .quote-card.open .quote-card-body{
       padding: 16px;
+      max-height: 2500px;
+      opacity: 1;
+    }
+    
+    /* Flechita visual */
+    .quote-card-head::after{
+      content: "▼";
+      margin-left: auto;
+      font-size: 14px;
+      transition: transform .3s ease;
+      opacity: .8;
+    }
+    
+    .quote-card.open .quote-card-head::after{
+      transform: rotate(180deg);
     }
 
     
@@ -339,7 +376,7 @@
         <div class="quote-grid">
 
           <!-- FORM -->
-          <div class="quote-card">
+          <div class="quote-card" id="quoteCardForm">
             <div class="quote-card-head">
               <div class="quote-badge">🎉 Solicitud de cotización</div>
             </div>
@@ -624,24 +661,30 @@
     // EXPANDIR / CONTRAER FORMULARIO
     // ==========================================================
     
-    const quoteCard = document.querySelector(".quote-card");
+    const quoteCard = document.getElementById("quoteCardForm");
+    const quoteHead = quoteCard.querySelector(".quote-card-head");
     const btnCotizarTop = document.getElementById("btnCotizarTop");
     const btnCotizarMobile = document.getElementById("btnCotizarMobile");
     
-    // Función para abrir
+    // Abrir
     function openForm(){
       quoteCard.classList.add("open");
       setTimeout(() => {
         quoteCard.scrollIntoView({ behavior: "smooth", block: "start" });
-      }, 200);
+      }, 150);
     }
     
-    // Función para cerrar
+    // Cerrar
     function closeForm(){
       quoteCard.classList.remove("open");
     }
     
-    // Botones que lo abren
+    // Toggle al hacer clic en el header
+    quoteHead.addEventListener("click", () => {
+      quoteCard.classList.toggle("open");
+    });
+    
+    // Botones del header principal
     if(btnCotizarTop){
       btnCotizarTop.addEventListener("click", openForm);
     }
@@ -747,30 +790,30 @@
           }
 
           // =====================================
-// 🚀 ABRIR WHATSAPP CON LA COTIZACIÓN
-// =====================================
-const waMessage = `
-Hola! ✨
-
-Te envío mi solicitud de cotización:
-
-📄 Folio: ${data.folio}
-👤 Cliente: ${payload.cliente}
-📱 Tel: ${payload.telefono}
-
-🎉 Tamaño: ${payload.tamano}
-🎨 Diseño: ${payload.diseno}
-📅 Entrega: ${payload.fechaEntrega}
-📍 Ubicación: ${payload.ubicacion}
-
-📝 Detalles:
-${payload.detalles}
-
-Gracias 🙌
-`;
-
-const encoded = encodeURIComponent(waMessage);
-window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, "_blank");
+          // 🚀 ABRIR WHATSAPP CON LA COTIZACIÓN
+          // =====================================
+          const waMessage = `
+          Hola! ✨
+          
+          Te envío mi solicitud de cotización:
+          
+          📄 Folio: ${data.folio}
+          👤 Cliente: ${payload.cliente}
+          📱 Tel: ${payload.telefono}
+          
+          🎉 Tamaño: ${payload.tamano}
+          🎨 Diseño: ${payload.diseno}
+          📅 Entrega: ${payload.fechaEntrega}
+          📍 Ubicación: ${payload.ubicacion}
+          
+          📝 Detalles:
+          ${payload.detalles}
+          
+          Gracias 🙌
+          `;
+          
+          const encoded = encodeURIComponent(waMessage);
+          window.open(`https://wa.me/${WA_NUMBER}?text=${encoded}`, "_blank");
 
           // Éxito
           if(successMsg){
