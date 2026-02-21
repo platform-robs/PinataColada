@@ -10,6 +10,24 @@
 
   <!-- Estilos EXTRA SOLO para el formulario (no rompen tu CSS global) -->
   <style>
+
+    /* =================================
+       ANIMACIÓN EXPANSIÓN FORMULARIO
+    ================================= */
+    
+    .quote-card-body{
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height .5s ease, opacity .4s ease;
+      opacity: 0;
+    }
+    
+    .quote-card.open .quote-card-body{
+      max-height: 2000px; /* suficiente para todo el form */
+      opacity: 1;
+    }
+
+    
     /* ================================
        FORM - ESTILO PIÑATA COLADA
        ================================ */
@@ -614,6 +632,36 @@
     const telefono = document.getElementById("telefono");
     const fechaEntrega = document.getElementById("fechaEntrega");
 
+    // ==========================================================
+    // EXPANDIR / CONTRAER FORMULARIO
+    // ==========================================================
+    
+    const quoteCard = document.querySelector(".quote-card");
+    const btnCotizarTop = document.getElementById("btnCotizarTop");
+    const btnCotizarMobile = document.getElementById("btnCotizarMobile");
+    
+    // Función para abrir
+    function openForm(){
+      quoteCard.classList.add("open");
+      setTimeout(() => {
+        quoteCard.scrollIntoView({ behavior: "smooth", block: "start" });
+      }, 200);
+    }
+    
+    // Función para cerrar
+    function closeForm(){
+      quoteCard.classList.remove("open");
+    }
+    
+    // Botones que lo abren
+    if(btnCotizarTop){
+      btnCotizarTop.addEventListener("click", openForm);
+    }
+    
+    if(btnCotizarMobile){
+      btnCotizarMobile.addEventListener("click", openForm);
+    }
+
     // Nombre en mayúsculas
     if(cliente){
       cliente.addEventListener("input", () => {
@@ -747,6 +795,7 @@ window.location.href = `https://wa.me/${WA_NUMBER}?text=${encoded}`;
           }
 
           quoteForm.reset();
+          closeForm();
 
         }catch(err){
           alert("❌ No se pudo enviar tu cotización.\n\n" + err.message);
