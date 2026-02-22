@@ -165,7 +165,7 @@ cursor:pointer;
 <option value="Todos">Todos</option>
 <option value="Pendiente">Pendiente</option>
 <option value="En Desarrollo">En Desarrollo</option>
-<option value="Aprobadas">Aprobadas</option>
+<option value="Aprobada">Aprobada</option>
 <option value="Entregada">Entregada</option>
 <option value="Cancelada">Cancelada</option>
 </select>
@@ -227,7 +227,7 @@ card.innerHTML=`
 <select onchange="updateEstatus(${c.rowIndex},this.value)">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
 <option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
-<option ${c.Estatus==="Aprobadas"?"selected":""}>Aprobadas</option>
+<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
 <option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
