@@ -9,43 +9,6 @@
 
 <style>
 
-
-   .card{
-text-align:center;
-}
-
-.card p{
-margin:8px 0;
-}
-
-.card-buttons{
-justify-content:center;
-}
-
-h3{
-text-align:center;
-}
-
-button{
-cursor:pointer;
-border:none;
-border-radius:999px;
-padding:8px 14px;
-font-weight:700;
-transition:.2s;
-}
-
-button:hover{
-transform:translateY(-2px);
-opacity:.9;
-}
-
-/* colores */
-.btn-edit{ background:#17a2b8; color:white; }
-.btn-delete{ background:#dc3545; color:white; }
-.btn-primary{ background:#28a745; color:white; }
-.btn-ticket{ background:#6f42c1; color:white; }
-   
 /* ===============================
    BASE
 ================================ */
@@ -53,59 +16,54 @@ opacity:.9;
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
-background:
-  radial-gradient(1000px 600px at 15% 10%, rgba(255,79,166,.20), transparent 55%),
-  radial-gradient(900px 600px at 90% 20%, rgba(255,213,74,.18), transparent 55%),
-  radial-gradient(900px 600px at 55% 100%, rgba(60,255,192,.10), transparent 60%),
-  #0b0b0f;
+background:#0f1116;
 color:white;
 }
 
-.container{ padding:30px; }
+.container{ padding:25px; }
 
 /* ===============================
-   NAV
+   NAVBAR
 ================================ */
 
 .admin-nav{
 display:flex;
 justify-content:space-between;
 align-items:center;
-background:#1b1b22;
+background:#1b1f2a;
 padding:15px 20px;
-border-radius:20px;
+border-radius:16px;
+margin-bottom:20px;
 }
 
 .admin-links{
 display:flex;
 gap:10px;
+flex-wrap:wrap;
 }
 
 .admin-links button{
-background:rgba(255,255,255,.05);
+background:rgba(255,255,255,.08);
 color:white;
+border:none;
+padding:8px 14px;
+border-radius:999px;
+cursor:pointer;
+font-weight:700;
+}
+
+.admin-links button.active{
+background:#28a745;
 }
 
 .admin-menu-btn{
 display:none;
-background:rgba(255,255,255,.05);
+background:rgba(255,255,255,.08);
 color:white;
-font-size:22px;
-}
-
-.admin-mobile-menu{
-display:none;
-flex-direction:column;
-gap:10px;
-margin-top:10px;
-background:#1b1b22;
-padding:15px;
-border-radius:20px;
-}
-
-.admin-mobile-menu button{
-background:rgba(255,255,255,.05);
-color:white;
+border:none;
+padding:8px 12px;
+border-radius:10px;
+font-size:20px;
 }
 
 /* ===============================
@@ -113,31 +71,33 @@ color:white;
 ================================ */
 
 .card{
-background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
-border:1px solid rgba(255,255,255,.08);
+background:#1b1f2a;
 padding:20px;
-border-radius:20px;
-margin-bottom:20px;
+border-radius:16px;
+margin-bottom:15px;
+text-align:center;
 }
 
-.card-buttons{ display:flex; gap:8px; flex-wrap:wrap; margin-top:15px; }
+.card button{
+margin:5px;
+}
 
 /* ===============================
-   BADGES
+   BOTONES
 ================================ */
 
-.badge{
-padding:5px 10px;
-border-radius:20px;
-font-size:12px;
-font-weight:800;
-}
+.btn-primary{ background:#28a745; color:white; }
+.btn-edit{ background:#17a2b8; color:white; }
+.btn-delete{ background:#dc3545; color:white; }
+.btn-ticket{ background:#6f42c1; color:white; }
 
-.badge-Pendiente{ background:#ffc107; color:black; }
-.badge-EnDesarrollo{ background:#17a2b8; }
-.badge-Aprobada{ background:#28a745; }
-.badge-Entregada{ background:#6f42c1; }
-.badge-Cancelada{ background:#dc3545; }
+button{
+border:none;
+padding:8px 14px;
+border-radius:999px;
+cursor:pointer;
+font-weight:700;
+}
 
 /* ===============================
    POPUP
@@ -146,7 +106,7 @@ font-weight:800;
 .popup-overlay{
 position:fixed;
 inset:0;
-background:rgba(0,0,0,.6);
+background:rgba(0,0,0,.7);
 display:flex;
 justify-content:center;
 align-items:center;
@@ -154,39 +114,31 @@ z-index:999;
 }
 
 .popup{
-background:#f8f9fa;
+background:white;
 color:#222;
 width:95%;
-max-width:750px;
+max-width:800px;
 max-height:90vh;
 overflow-y:auto;
-border-radius:20px;
-padding:30px;
-box-shadow:0 30px 80px rgba(0,0,0,.4);
+border-radius:16px;
+padding:25px;
 text-align:center;
-}
-
-.popup h2{
-margin-top:0;
 }
 
 .popup input,
 .popup select{
 width:100%;
 padding:10px;
-margin:8px 0;
-border-radius:12px;
+margin:6px 0;
+border-radius:10px;
 border:1px solid #ccc;
 text-align:center;
 }
 
-.popup button{
-margin-top:15px;
-}
-
 .close-btn{
 background:#dc3545;
-margin-bottom:15px;
+color:white;
+margin-bottom:10px;
 }
 
 /* ===============================
@@ -206,79 +158,12 @@ margin-bottom:15px;
 <div class="container">
 
 <header class="admin-nav">
-  <div style="font-weight:900;">
-    Panel — Piñata Colada
-  </div>
+  <div style="font-weight:900;">Panel — Piñata Colada</div>
 
-  <nav class="admin-links">
+  <div class="admin-links" id="navbar"></div>
 
-    <button onclick="setFiltro('Todos')">
-      Todos (<span id="count-Todos">0</span>)
-    </button>
-
-    <button onclick="setFiltro('Pendiente')">
-      Pendiente (<span id="count-Pendiente">0</span>)
-    </button>
-
-    <button onclick="setFiltro('En Desarrollo')">
-      En Desarrollo (<span id="count-En Desarrollo">0</span>)
-    </button>
-
-    <button onclick="setFiltro('Aprobada')">
-      Aprobada (<span id="count-Aprobada">0</span>)
-    </button>
-
-    <button onclick="setFiltro('Entregada')">
-      Entregada (<span id="count-Entregada">0</span>)
-    </button>
-
-    <button onclick="setFiltro('Cancelada')">
-      Cancelada (<span id="count-Cancelada">0</span>)
-    </button>
-
-  </nav>
-
-  <button class="admin-menu-btn" onclick="toggleAdminMenu()">
-    ☰
-  </button>
+  <button class="admin-menu-btn" onclick="toggleMenu()">☰</button>
 </header>
-
-<div class="admin-mobile-menu" id="adminMobileMenu">
-
-  <button onclick="setFiltro('Todos')">
-    Todos (<span id="countM-Todos">0</span>)
-  </button>
-
-  <button onclick="setFiltro('Pendiente')">
-    Pendiente (<span id="countM-Pendiente">0</span>)
-  </button>
-
-  <button onclick="setFiltro('En Desarrollo')">
-    En Desarrollo (<span id="countM-En Desarrollo">0</span>)
-  </button>
-
-  <button onclick="setFiltro('Aprobada')">
-    Aprobada (<span id="countM-Aprobada">0</span>)
-  </button>
-
-  <button onclick="setFiltro('Entregada')">
-    Entregada (<span id="countM-Entregada">0</span>)
-  </button>
-
-  <button onclick="setFiltro('Cancelada')">
-    Cancelada (<span id="countM-Cancelada">0</span>)
-  </button>
-
-</div>
-
-<div class="admin-mobile-menu" id="adminMobileMenu">
-  <button onclick="setFiltro('Todos')">Todos</button>
-  <button onclick="setFiltro('Pendiente')">Pendiente</button>
-  <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
-  <button onclick="setFiltro('Aprobada')">Aprobada</button>
-  <button onclick="setFiltro('Entregada')">Entregada</button>
-  <button onclick="setFiltro('Cancelada')">Cancelada</button>
-</div>
 
 <div id="lista"></div>
 
@@ -293,19 +178,58 @@ let tickets=[];
 let filtroActual="Todos";
 
 /* ===============================
-   CARGAR DATOS
+   CARGAR
 ================================ */
+
 async function cargar(){
 const res=await fetch(API+"?action=getAll");
 const data=await res.json();
+
 cotizaciones=data.cotizaciones||[];
 tickets=data.tickets||[];
+
 render();
+renderNavbar();
+}
+
+/* ===============================
+   NAVBAR CON CONTADORES
+================================ */
+
+function renderNavbar(){
+
+const estados=["Pendiente","En Desarrollo","Aprobada","Entregada","Cancelada"];
+
+let html=`<button onclick="setFiltro('Todos')" class="${filtroActual==='Todos'?'active':''}">
+Todos (${cotizaciones.length})
+</button>`;
+
+estados.forEach(e=>{
+const count=cotizaciones.filter(c=>c.Estatus===e).length;
+
+html+=`
+<button onclick="setFiltro('${e}')" class="${filtroActual===e?'active':''}">
+${e} (${count})
+</button>`;
+});
+
+document.getElementById("navbar").innerHTML=html;
+}
+
+/* ===============================
+   FILTRO
+================================ */
+
+function setFiltro(f){
+filtroActual=f;
+render();
+renderNavbar();
 }
 
 /* ===============================
    RENDER
 ================================ */
+
 function render(){
 
 const lista=document.getElementById("lista");
@@ -315,136 +239,41 @@ cotizaciones
 .filter(c=>filtroActual==="Todos"||c.Estatus===filtroActual)
 .forEach(c=>{
 
-const relacionados=tickets.filter(t=>t.Folio===c.Folio);
-
-let botonesTickets="";
-
-if(relacionados.length>0){
-  relacionados.forEach((t,i)=>{
-    botonesTickets += `
-      <button class="btn-ticket" onclick="verTicket(${t.rowIndex})">
-        Ver Ticket ${String.fromCharCode(65+i)}
-      </button>
-    `;
-  });
-}
-
 lista.innerHTML+=`
 <div class="card">
+
 <h3>${c.Folio} — ${c.Cliente}</h3>
-
 <p><strong>Evento:</strong> ${c.Evento}</p>
+<p><strong>Precio:</strong> $${c.Precio||0}</p>
+<p><strong>Anticipo:</strong> $${c.Anticipo||0}</p>
+<p><strong>Estatus:</strong> ${c.Estatus}</p>
 
-<p><strong>Precio:</strong> 
-${c.Precio ? "$"+c.Precio : `
-<input type="number" id="precio-${c.rowIndex}" placeholder="Agregar precio">
-<button onclick="guardarPrecio(${c.rowIndex})">Guardar</button>
-`}
-</p>
-
-<div style="margin-top:10px;text-align:center;">
-<strong>Estatus</strong><br><br>
-
-<select onchange="cambiarEstatus(${c.rowIndex},this.value)"
-style="
-padding:8px 12px;
-border-radius:20px;
-border:none;
-font-weight:700;
-text-align:center;
-">
-
-<option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
-<option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
-<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
-<option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
-<option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
-
-</select>
-
-</div>
-
-<div class="card-buttons">
-<button class="btn-edit" onclick="verCotizacion(${c.rowIndex})">Ver / Editar</button>
-${botonesTickets}
-<button class="btn-delete" onclick="eliminarCotizacion('${c.Folio}')">Eliminar</button>
-<button class="btn-primary" onclick="abrirCrearTicket(${c.rowIndex})">
-Crear Ticket
-</button>
-</div>
+<button class="btn-edit" onclick="editar(${c.rowIndex})">Editar</button>
+<button class="btn-ticket" onclick="crearTicket(${c.rowIndex})">Crear Ticket</button>
+<button class="btn-delete" onclick="eliminar('${c.Folio}')">Eliminar</button>
 
 </div>
 `;
 });
 }
 
-
-
-   
 /* ===============================
-   CAMBIAR ESTATUS
+   EDITAR COMPLETO
 ================================ */
-async function cambiarEstatus(rowIndex,nuevo){
 
-await fetch(API,{
-method:"POST",
-body:JSON.stringify({
-action:"updateCotizacion",
-rowIndex:rowIndex,
-Estatus:nuevo
-})
-});
+function editar(row){
 
-cargar();
-}
+const c=cotizaciones.find(x=>x.rowIndex===row);
 
-/* ===============================
-   GUARDAR PRECIO
-================================ */
-async function guardarPrecio(rowIndex){
+let html=`
+<h2>Editar Cotización</h2>
 
-const input=document.getElementById("precio-"+rowIndex);
-if(!input) return;
+<input id="Cliente" value="${c.Cliente||''}">
+<input id="Evento" value="${c.Evento||''}">
+<input id="Precio" type="number" value="${c.Precio||0}">
+<input id="Anticipo" type="number" value="${c.Anticipo||0}">
 
-const precio=input.value;
-
-await fetch(API,{
-method:"POST",
-body:JSON.stringify({
-action:"updateCotizacion",
-rowIndex:rowIndex,
-Precio:precio
-})
-});
-
-cargar();
-}
-
-/* ===============================
-   VER / EDITAR COTIZACIÓN
-================================ */
-function verCotizacion(rowIndex){
-
-const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
-
-let contenido = `
-<label>Cliente</label>
-<input type="text" id="editCliente" value="${c.Cliente||""}">
-
-<label>Evento</label>
-<input type="text" id="editEvento" value="${c.Evento||""}">
-
-<label>Teléfono</label>
-<input type="text" id="editTelefono" value="${c["Teléfono"]||""}">
-
-<label>Fecha de entrega</label>
-<input type="text" id="editFecha" value="${c["Fecha de entrega"]||""}">
-
-<label>Precio</label>
-<input type="number" id="editPrecio" value="${c.Precio||""}">
-
-<label>Estatus</label>
-<select id="editEstatus">
+<select id="Estatus">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
 <option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
 <option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
@@ -452,167 +281,97 @@ let contenido = `
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
 
-<br><br>
-<button class="btn-primary" onclick="actualizarCotizacionCompleta(${rowIndex})">
-Guardar Todo
-</button>
+<button class="btn-primary" onclick="guardar(${row})">Guardar</button>
+<button class="close-btn" onclick="cerrar()">Cerrar</button>
 `;
 
-openPopup("Editar Cotización",contenido);
+openPopup(html);
 }
 
 /* ===============================
-   ACTUALIZAR COTIZACIÓN
+   GUARDAR
 ================================ */
-async function actualizarCotizacionCompleta(rowIndex){
+
+async function guardar(row){
 
 await fetch(API,{
 method:"POST",
 body:JSON.stringify({
 action:"updateCotizacion",
-rowIndex:rowIndex,
-Cliente:document.getElementById("editCliente").value,
-Evento:document.getElementById("editEvento").value,
-"Teléfono":document.getElementById("editTelefono").value,
-"Fecha de entrega":document.getElementById("editFecha").value,
-Precio:document.getElementById("editPrecio").value,
-Estatus:document.getElementById("editEstatus").value
+rowIndex:row,
+Cliente:Cliente.value,
+Evento:Evento.value,
+Precio:Precio.value,
+Anticipo:Anticipo.value,
+Estatus:Estatus.value
 })
 });
 
-cerrarPopup();
+cerrar();
 cargar();
 }
 
 /* ===============================
-   FILTROS
+   CREAR TICKET CON CÁLCULO
 ================================ */
 
-function setFiltro(filtro){
-  filtroActual = filtro;
-  render();
-  document.getElementById("adminMobileMenu").style.display="none";
-}
+function crearTicket(row){
 
-function toggleAdminMenu(){
-  const menu = document.getElementById("adminMobileMenu");
-  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
-}   
+const c=cotizaciones.find(x=>x.rowIndex===row);
 
-   function actualizarContadores(){
+const precio=parseFloat(c.Precio||0);
+const anticipo=parseFloat(c.Anticipo||0);
+const saldo=precio-anticipo;
 
-const estatuses = ["Pendiente","En Desarrollo","Aprobada","Entregada","Cancelada"];
+let html=`
+<h2>Crear Ticket</h2>
 
-document.getElementById("count-Todos").innerText = cotizaciones.length;
-document.getElementById("countM-Todos").innerText = cotizaciones.length;
+<p>Precio: $${precio}</p>
+<p>Anticipo: $${anticipo}</p>
+<p>Saldo: $${saldo}</p>
 
-estatuses.forEach(e=>{
+<label>Monto del Ticket</label>
+<input id="monto" type="number" value="${saldo}">
 
-  const cantidad = cotizaciones.filter(c=>c.Estatus===e).length;
-
-  document.getElementById("count-"+e).innerText = cantidad;
-  document.getElementById("countM-"+e).innerText = cantidad;
-
-});
-
-}
-   
-/* ===============================
-   VER TICKET
-================================ */
-function verTicket(rowIndex){
-
-const t=tickets.find(x=>x.rowIndex===rowIndex);
-
-let contenido=`
-<p><strong>Cliente:</strong> ${t.Cliente}</p>
-<p><strong>Diseño:</strong> ${t.Diseño}</p>
-<p><strong>Precio:</strong> $${t.Precio}</p>
-<p><strong>Anticipo:</strong> $${t.Anticipo}</p>
-<p><strong>Saldo:</strong> $${t.Saldo||0}</p>
-
-<button class="btn-delete" onclick="cerrarPopup()">Cerrar</button>
-`;
-
-openPopup("Ticket",contenido);
-}
-
-/* ===============================
-   ABRIR/CREAR TICKET
-================================ */
-function abrirCrearTicket(rowIndex){
-
-const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
-if(!c) return;
-
-const precio = parseFloat(c.Precio||0);
-const anticipo = parseFloat(c.Anticipo||0);
-const saldo = precio - anticipo;
-
-let contenido = `
-<p><strong>Folio:</strong> ${c.Folio}</p>
-<p><strong>Precio:</strong> $${precio}</p>
-<p><strong>Anticipo:</strong> $${anticipo}</p>
-<p><strong>Saldo calculado:</strong> $${saldo}</p>
-
-<hr>
-
-<label>Tipo de Ticket</label>
-<select id="tipoTicket">
-<option value="A">Ticket A (Pago parcial)</option>
-<option value="B">Ticket B (Liquidación)</option>
-<option value="Unico">Pago en una sola exhibición</option>
+<select id="tipo">
+<option value="Unico">Pago Único</option>
+<option value="A">Ticket A</option>
+<option value="B">Ticket B</option>
 </select>
 
-<button class="btn-primary" onclick="crearTicket(${rowIndex})">
-Confirmar y Crear
-</button>
+<button class="btn-primary" onclick="guardarTicket(${row})">Crear</button>
+<button class="close-btn" onclick="cerrar()">Cerrar</button>
 `;
 
-openPopup("Crear Ticket",contenido);
+openPopup(html);
 }
 
+async function guardarTicket(row){
 
-/* ===============================
-   CREAR TICKET
-================================ */
-async function crearTicket(rowIndex){
-
-const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
-if(!c) return;
-
-const tipo = document.getElementById("tipoTicket").value;
-
-const precio = parseFloat(c.Precio||0);
-const anticipo = parseFloat(c.Anticipo||0);
-const saldo = precio - anticipo;
+const c=cotizaciones.find(x=>x.rowIndex===row);
 
 await fetch(API,{
 method:"POST",
 body:JSON.stringify({
 action:"crearTicket",
-rowIndex:rowIndex,
+rowIndex:row,
 Folio:c.Folio,
-Tipo:tipo,
-Precio:precio,
-Anticipo:anticipo,
-Saldo: saldo,
-Cliente:c.Cliente,
-Evento:c.Evento,
-Estatus:"Activo"
+Tipo:tipo.value,
+Monto:monto.value
 })
 });
 
-cerrarPopup();
+cerrar();
 cargar();
 }
-   
+
 /* ===============================
    ELIMINAR
 ================================ */
-async function eliminarCotizacion(folio){
 
-if(!confirm("¿Eliminar cotización y tickets vinculados?")) return;
+async function eliminar(folio){
+
+if(!confirm("¿Eliminar?")) return;
 
 await fetch(API,{
 method:"POST",
@@ -628,53 +387,32 @@ cargar();
 /* ===============================
    POPUP
 ================================ */
-function openPopup(titulo,contenido){
+
+function openPopup(content){
 
 document.body.insertAdjacentHTML("beforeend",`
-<div class="popup-overlay" onclick="cerrarPopup(event)">
+<div class="popup-overlay" onclick="cerrar(event)">
 <div class="popup" onclick="event.stopPropagation()">
-
-<div style="text-align:center;margin-bottom:15px;">
-<img src="URL_DE_TU_LOGO" style="max-height:60px;">
-</div>
-
-<h2>${titulo}</h2>
-${contenido}
-
+${content}
 </div>
 </div>
 `);
 }
 
-function cerrarPopup(e){
-if(!e || e.target.classList.contains("popup-overlay")){
+function cerrar(){
 document.querySelector(".popup-overlay")?.remove();
 }
+
+function toggleMenu(){
+document.getElementById("navbar").classList.toggle("show");
 }
 
 /* ===============================
    INICIAR
 ================================ */
-async function cargar(){
-  const res = await fetch(API+"?action=getAll");
-  const data = await res.json();
 
-  cotizaciones = data.cotizaciones || [];
-  tickets = data.tickets || [];
+cargar();
 
-  render();
-  actualizarContadores(); // 🔥 IMPORTANTE
-}
-
-
-  /* ===============================
-   CONTADOR
-================================ */ 
-function contarPorEstatus(estatus){
-if(estatus==="Todos") return cotizaciones.length;
-return cotizaciones.filter(c=>c.Estatus===estatus).length;
-}
-   
 </script>
 
 </body>
