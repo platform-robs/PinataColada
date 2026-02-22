@@ -242,14 +242,10 @@ ${c.Precio ? "$"+c.Precio : `
 `}
 </p>
 
-<p><strong>Estatus:</strong>
-<select onchange="cambiarEstatus(${c.rowIndex},this.value)">
-<option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
-<option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
-<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
-<option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
-<option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
-</select>
+<p><strong>Estatus:</strong><br>
+<span class="badge badge-${(c.Estatus||"Pendiente").replace(/\s+/g,"")}">
+${c.Estatus||"Pendiente"}
+</span>
 </p>
 
 <div class="card-buttons">
@@ -263,6 +259,9 @@ ${botonesTickets}
 });
 }
 
+
+
+   
 /* ===============================
    CAMBIAR ESTATUS
 ================================ */
@@ -307,38 +306,58 @@ cargar();
 ================================ */
 function verCotizacion(rowIndex){
 
-const c=cotizaciones.find(x=>x.rowIndex===rowIndex);
+const c = cotizaciones.find(x=>x.rowIndex===rowIndex);
 
-let contenido=`
-<p><strong>Cliente:</strong> ${c.Cliente}</p>
-<p><strong>Evento:</strong> ${c.Evento}</p>
-<p><strong>Teléfono:</strong> ${c["Teléfono"]||"-"}</p>
-<p><strong>Fecha entrega:</strong> ${c["Fecha de entrega"]||"-"}</p>
+let contenido = `
+<label>Cliente</label>
+<input type="text" id="editCliente" value="${c.Cliente||""}">
 
-<p><strong>Editar Precio:</strong></p>
+<label>Evento</label>
+<input type="text" id="editEvento" value="${c.Evento||""}">
+
+<label>Teléfono</label>
+<input type="text" id="editTelefono" value="${c["Teléfono"]||""}">
+
+<label>Fecha de entrega</label>
+<input type="text" id="editFecha" value="${c["Fecha de entrega"]||""}">
+
+<label>Precio</label>
 <input type="number" id="editPrecio" value="${c.Precio||""}">
 
-<button onclick="actualizarCotizacion(${rowIndex})" class="save-btn">
-Guardar Cambios
+<label>Estatus</label>
+<select id="editEstatus">
+<option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
+<option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
+<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
+<option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
+<option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
+</select>
+
+<br><br>
+<button onclick="actualizarCotizacionCompleta(${rowIndex})">
+Guardar Todo
 </button>
 `;
 
-openPopup("Cotización "+c.Folio,contenido);
+openPopup("Editar Cotización",contenido);
 }
 
 /* ===============================
    ACTUALIZAR COTIZACIÓN
 ================================ */
-async function actualizarCotizacion(rowIndex){
-
-const precio=document.getElementById("editPrecio").value;
+async function actualizarCotizacionCompleta(rowIndex){
 
 await fetch(API,{
 method:"POST",
 body:JSON.stringify({
 action:"updateCotizacion",
 rowIndex:rowIndex,
-Precio:precio
+Cliente:document.getElementById("editCliente").value,
+Evento:document.getElementById("editEvento").value,
+"Teléfono":document.getElementById("editTelefono").value,
+"Fecha de entrega":document.getElementById("editFecha").value,
+Precio:document.getElementById("editPrecio").value,
+Estatus:document.getElementById("editEstatus").value
 })
 });
 
@@ -346,6 +365,22 @@ cerrarPopup();
 cargar();
 }
 
+/* ===============================
+   FILTROS
+================================ */
+
+function setFiltro(filtro){
+  filtroActual = filtro;
+  render();
+  document.getElementById("adminMobileMenu").style.display="none";
+}
+
+function toggleAdminMenu(){
+  const menu = document.getElementById("adminMobileMenu");
+  menu.style.display = menu.style.display === "flex" ? "none" : "flex";
+}   
+
+   
 /* ===============================
    VER TICKET
 ================================ */
