@@ -3,7 +3,8 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gestor Piñata Colada</title>
+
+<title>Panel Piñata Colada</title>
 
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
@@ -13,7 +14,6 @@
 --yellow:#ffd84d;
 --bg:#0f0f13;
 --card:#1b1b22;
---text:#ffffff;
 --muted:#9c9c9c;
 }
 
@@ -22,36 +22,37 @@ margin:0;
 padding:0;
 box-sizing:border-box;
 font-family:'Montserrat',sans-serif;
-text-align:center;
 }
 
 body{
 background:var(--bg);
 color:white;
-padding:20px 12px 100px;
+padding:20px;
 }
 
 h1{
-font-size:22px;
+text-align:center;
+font-weight:800;
 margin-bottom:20px;
 background:linear-gradient(135deg,var(--pink),var(--yellow));
 -webkit-background-clip:text;
 -webkit-text-fill-color:transparent;
 }
 
-.counter{
+.topbar{
 display:flex;
-justify-content:space-between;
+overflow:auto;
+gap:8px;
 margin-bottom:20px;
-font-size:12px;
 }
 
-.counter div{
+.badge{
 background:var(--card);
-padding:10px;
-border-radius:14px;
-flex:1;
-margin:0 4px;
+padding:10px 14px;
+border-radius:30px;
+font-size:12px;
+white-space:nowrap;
+cursor:pointer;
 }
 
 .card{
@@ -59,23 +60,15 @@ background:var(--card);
 padding:18px;
 border-radius:20px;
 margin-bottom:16px;
-box-shadow:0 8px 20px rgba(0,0,0,.4);
-}
-
-input,select{
-width:100%;
-padding:10px;
-border-radius:12px;
-border:none;
-margin-top:8px;
 }
 
 button{
-margin-top:10px;
-padding:10px 18px;
+margin-top:8px;
+padding:8px 14px;
 border-radius:30px;
 border:none;
 font-weight:600;
+cursor:pointer;
 background:linear-gradient(135deg,var(--pink),var(--yellow));
 color:#000;
 }
@@ -84,143 +77,169 @@ color:#000;
 background:#ff3b3b;
 color:white;
 }
+
+input,select{
+width:100%;
+margin-top:6px;
+padding:8px;
+border-radius:12px;
+border:none;
+}
 </style>
 </head>
 
 <body>
 
-<h1>Solicitudes</h1>
+<h1>Panel Cotizaciones</h1>
 
-<div class="counter">
-<div id="cPendiente">Pendiente: 0</div>
-<div id="cDesarrollo">En desarrollo: 0</div>
-<div id="cEntregada">Entregada: 0</div>
-<div id="cCancelada">Cancelada: 0</div>
-</div>
+<div class="topbar" id="filtros"></div>
 
-<div id="list"></div>
+<div id="lista"></div>
 
 <script>
 
-const API_URL = "https://script.google.com/macros/s/AKfycby5XoViRjN8TD8EG3zA9rNsl8EUpo1M7S9o6espgQYv059CaiZnX_pP3DZRxBFKkaEN/exec";
+const API_URL="https://script.google.com/macros/s/AKfycbxUadwlid3lilNCAzb6tYRoHE3HW6Y7U1XE4LXn-n2K491Z6w5a_B37KAfyW41JJU-G/exec";
 
 let cotizaciones=[];
+let tickets=[];
+let filtroActual="Todos";
 
 async function cargar(){
-const res=await fetch(`${API_URL}?action=getCotizaciones`);
-cotizaciones=await res.json();
+const res=await fetch(`${API_URL}?action=getAll`);
+const data=await res.json();
+cotizaciones=data.cotizaciones;
+tickets=data.tickets;
 render();
 }
 
 function render(){
 
-let p=0,d=0,e=0,c=0;
+renderFiltros();
 
-const list=document.getElementById("list");
-list.innerHTML="";
+const lista=document.getElementById("lista");
+lista.innerHTML="";
 
-cotizaciones.forEach(x=>{
+cotizaciones
+.filter(c=>filtroActual==="Todos"||c.Estatus===filtroActual)
+.forEach(c=>{
 
-if(x.Estatus=="Pendiente")p++;
-if(x.Estatus=="En desarrollo")d++;
-if(x.Estatus=="Entregada")e++;
-if(x.Estatus=="Cancelada")c++;
+const relacionados=tickets.filter(t=>t.Folio===c.Folio);
 
 const card=document.createElement("div");
 card.className="card";
 
 card.innerHTML=`
-<h3>${x.Folio}</h3>
-<p>${x.Cliente}</p>
+<h3>${c.Folio}</h3>
+<p>${c.Cliente}</p>
 
-<select onchange="cambiarEstatus(${x.rowIndex},this.value)">
-<option ${x.Estatus=="Pendiente"?"selected":""}>Pendiente</option>
-<option ${x.Estatus=="En desarrollo"?"selected":""}>En desarrollo</option>
-<option ${x.Estatus=="Entregada"?"selected":""}>Entregada</option>
-<option ${x.Estatus=="Cancelada"?"selected":""}>Cancelada</option>
+<select onchange="updateCot(${c.rowIndex},this.value)">
+<option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
+<option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
+<option ${c.Estatus==="Aprobadas"?"selected":""}>Aprobadas</option>
+<option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
+<option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
 
 <input type="number" placeholder="Precio"
-value="${x.Precio||""}"
-onchange="guardarPrecio(${x.rowIndex})"
-id="precio${x.rowIndex}">
+value="${c.Precio||""}"
+onchange="guardarPrecio(${c.rowIndex},this.value)">
 
-<input type="number" placeholder="Anticipo"
-onchange="guardarTicket(${x.rowIndex})"
-id="anticipo${x.rowIndex}">
-
-<button onclick="guardarTicket(${x.rowIndex})">
-Generar / Actualizar Ticket
+<button onclick="crearTicket('${c.Folio}')">
+Nuevo Ticket
 </button>
 
-<button class="delete" onclick="eliminar('${x.Folio}')">
+${relacionados.map((t,i)=>`
+<div style="margin-top:8px;background:#111;padding:8px;border-radius:10px;">
+Ticket ${String.fromCharCode(65+i)} —
+Anticipo: ${t.Anticipo} —
+Saldo: ${t["Saldo pendiente"]}
+</div>
+`).join("")}
+
+<button class="delete" onclick="eliminar('${c.Folio}')">
 Eliminar
 </button>
 `;
 
-list.appendChild(card);
+lista.appendChild(card);
 
 });
 
-document.getElementById("cPendiente").innerText=`Pendiente: ${p}`;
-document.getElementById("cDesarrollo").innerText=`En desarrollo: ${d}`;
-document.getElementById("cEntregada").innerText=`Entregada: ${e}`;
-document.getElementById("cCancelada").innerText=`Cancelada: ${c}`;
-
 }
 
-async function cambiarEstatus(rowIndex,estatus){
+function renderFiltros(){
+const estados=["Todos","Pendiente","En Desarrollo","Aprobadas","Entregada","Cancelada"];
+
+const contadores={};
+estados.forEach(e=>contadores[e]=0);
+
+cotizaciones.forEach(c=>{
+if(contadores[c.Estatus]!==undefined)
+contadores[c.Estatus]++;
+});
+
+const div=document.getElementById("filtros");
+div.innerHTML="";
+
+estados.forEach(e=>{
+const el=document.createElement("div");
+el.className="badge";
+el.innerText=`${e} (${contadores[e]||0})`;
+el.onclick=()=>{filtroActual=e;render();}
+div.appendChild(el);
+});
+}
+
+async function updateCot(rowIndex,estatus){
 await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({
 action:"updateCotizacion",
 rowIndex,
-estatus,
-precio:document.getElementById(`precio${rowIndex}`).value||0
+Estatus:estatus
 })
 });
 cargar();
 }
 
-async function guardarPrecio(rowIndex){
-await cambiarEstatus(rowIndex,"En desarrollo");
+async function guardarPrecio(rowIndex,precio){
+await fetch(API_URL,{
+method:"POST",
+body:JSON.stringify({
+action:"updateCotizacion",
+rowIndex,
+Precio:precio
+})
+});
 }
 
-async function guardarTicket(rowIndex){
+async function crearTicket(folio){
 
-const x=cotizaciones.find(c=>c.rowIndex==rowIndex);
+const c=cotizaciones.find(x=>x.Folio===folio);
 
-if(!x.Precio){
-alert("Define primero el precio");
+if(!c.Precio){
+alert("Define precio primero");
 return;
 }
 
-const anticipo=parseFloat(document.getElementById(`anticipo${rowIndex}`).value)||0;
+const anticipo=prompt("¿Cuánto pagó?");
+if(!anticipo)return;
 
 await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({
 action:"saveTicket",
-folio:x.Folio,
-fechaSolicitud:x["Fecha de solicitud"],
-cliente:x.Cliente,
-tamano:x.Tamaño,
-diseno:x.Diseño,
-fechaEntrega:x["Fecha de entrega"],
-evento:x.Evento,
-telefono:x["Teléfono"],
-metodoPago:x["Método de pago"],
-entrega:x.Entrega,
-precio:x.Precio,
-anticipo
+...c,
+Anticipo:Number(anticipo),
+Precio:Number(c.Precio)
 })
 });
 
-alert("Ticket guardado");
+cargar();
 }
 
 async function eliminar(folio){
-if(!confirm("¿Eliminar cotización y ticket vinculado?"))return;
+if(!confirm("Eliminar cotización y todos sus tickets?"))return;
 
 await fetch(API_URL,{
 method:"POST",
