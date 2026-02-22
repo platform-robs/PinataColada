@@ -3,9 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
 <title>Gestor Piñata Colada</title>
-
 <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap" rel="stylesheet">
 
 <style>
@@ -15,201 +13,187 @@
   --bg:#0f0f13;
   --card:#1b1b22;
   --text:#ffffff;
-  --muted:#9a9a9a;
 }
 
 *{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
   font-family:'Montserrat',sans-serif;
   text-align:center;
 }
 
 body{
   background:var(--bg);
-  color:var(--text);
-  padding:20px 12px 90px;
-}
-
-h1{
-  font-weight:800;
-  font-size:22px;
-  margin-bottom:20px;
-  background:linear-gradient(135deg,var(--pink),var(--yellow));
-  -webkit-background-clip:text;
-  -webkit-text-fill-color:transparent;
-}
-
-select{
-  width:100%;
-  padding:12px;
-  border-radius:14px;
-  border:none;
-  background:var(--card);
   color:white;
-  margin-bottom:20px;
-  font-weight:600;
+  padding:20px;
 }
 
 .card{
   background:var(--card);
-  padding:18px;
+  padding:20px;
   border-radius:20px;
-  margin-bottom:16px;
-  box-shadow:0 8px 25px rgba(0,0,0,.4);
-  transition:.3s;
+  margin-bottom:20px;
 }
 
-.card:hover{
-  transform:translateY(-3px);
+input, select{
+  width:100%;
+  padding:10px;
+  margin:5px 0;
+  border-radius:12px;
+  border:none;
 }
-
-.badge{
-  display:inline-block;
-  padding:6px 14px;
-  border-radius:50px;
-  font-size:12px;
-  font-weight:600;
-  margin:8px 0;
-}
-
-.pendiente{ background:#ffc107; color:#000; }
-.desarrollo{ background:#2196f3; }
-.finalizada{ background:#4caf50; }
 
 button{
-  margin-top:10px;
   padding:10px 18px;
   border-radius:30px;
   border:none;
+  margin-top:8px;
   font-weight:600;
-  cursor:pointer;
   background:linear-gradient(135deg,var(--pink),var(--yellow));
   color:#000;
 }
-
-.editor{
-  position:fixed;
-  bottom:0;
-  left:0;
-  right:0;
-  background:var(--card);
-  padding:20px;
-  border-radius:25px 25px 0 0;
-  box-shadow:0 -10px 30px rgba(0,0,0,.6);
-  display:none;
-}
-
-.editor textarea{
-  width:100%;
-  border-radius:15px;
-  border:none;
-  padding:12px;
-  margin-top:10px;
-  resize:none;
-  height:80px;
-}
-
-@media(min-width:600px){
-  body{
-    max-width:500px;
-    margin:auto;
-  }
+.delete{
+  background:#ff3b3b;
+  color:#fff;
 }
 </style>
 </head>
 
 <body>
 
-<h1>Gestor de Cotizaciones</h1>
-
-<select id="filter">
-<option value="todos">Todos</option>
-<option value="Pendiente">Pendiente</option>
-<option value="En desarrollo">En desarrollo</option>
-<option value="Finalizada">Finalizada</option>
-</select>
+<h2>Solicitudes de Cotización</h2>
 
 <div id="list"></div>
 
-<div class="editor" id="editor">
-<h3 id="editorTitle"></h3>
-<textarea id="descripcion" placeholder="Escribe detalles del ticket..."></textarea>
-<button onclick="guardarTicket()">Guardar Ticket</button>
-</div>
-
 <script>
-const API_URL = "https://script.google.com/macros/s/AKfycbzBIiZJZCswzY4NuWuv0YTUBtltSx99eSmtgPVvwwwIXIbDqt-a86tyKqG-7_MJsWg/exec";
 
+const API_URL = "https://script.google.com/macros/s/AKfycbyhpSCLRXjePADfFhr7uM6gV8NU_nbplg2GtuGHUxCqGisULXfHUgf3pwsBc9eyfKPm/exec";
 let cotizaciones = [];
-let currentFolio = null;
-let currentCliente = null;
 
-async function cargarCotizaciones(){
+async function cargar(){
   const res = await fetch(`${API_URL}?action=getCotizaciones`);
   cotizaciones = await res.json();
   render();
 }
 
 function render(){
-  const filter = document.getElementById("filter").value;
   const list = document.getElementById("list");
-  list.innerHTML = "";
+  list.innerHTML="";
 
-  cotizaciones
-    .filter(c => filter === "todos" || c.Estatus === filter)
-    .forEach(c => {
-      const card = document.createElement("div");
-      card.className = "card";
+  cotizaciones.forEach(c => {
 
-      let clase = "pendiente";
-      if(c.Estatus==="En desarrollo") clase="desarrollo";
-      if(c.Estatus==="Finalizada") clase="finalizada";
+    const card = document.createElement("div");
+    card.className="card";
 
-      card.innerHTML = `
-        <h3>${c.Folio}</h3>
-        <p>${c.Cliente}</p>
-        <span class="badge ${clase}">${c.Estatus}</span>
-        <br>
-        <button onclick="abrirEditor('${c.Folio}','${c.Cliente}')">
-        Crear / Ver Ticket
-        </button>
-      `;
+    card.innerHTML = `
+      <h3>${c.Folio}</h3>
+      <p>${c.Cliente}</p>
 
-      list.appendChild(card);
-    });
+      <select onchange="cambiarEstatus(${c.rowIndex},this.value)">
+        <option ${c.Estatus=="Pendiente"?"selected":""}>Pendiente</option>
+        <option ${c.Estatus=="En desarrollo"?"selected":""}>En desarrollo</option>
+        <option ${c.Estatus=="Entregada"?"selected":""}>Entregada</option>
+        <option ${c.Estatus=="Cancelada"?"selected":""}>Cancelada</option>
+      </select>
+
+      <input type="number" placeholder="Precio"
+      value="${c.Precio || ""}"
+      onchange="guardarDatos(${c.rowIndex})"
+      id="precio${c.rowIndex}">
+
+      <input type="number" placeholder="Anticipo"
+      value="${c.Anticipo || ""}"
+      onchange="guardarDatos(${c.rowIndex})"
+      id="anticipo${c.rowIndex}">
+
+      <p>Saldo: ${c.Saldo || 0}</p>
+
+      <button onclick="crearTicket(${c.rowIndex})">
+        Generar / Actualizar Ticket
+      </button>
+
+      <button class="delete" onclick="eliminar('${c.Folio}')">
+        Eliminar
+      </button>
+    `;
+
+    list.appendChild(card);
+  });
 }
 
-function abrirEditor(folio,cliente){
-  currentFolio = folio;
-  currentCliente = cliente;
-  document.getElementById("editorTitle").innerText =
-    `Ticket ${folio}`;
-  document.getElementById("editor").style.display="block";
+async function guardarDatos(rowIndex){
+  const precio = parseFloat(document.getElementById(`precio${rowIndex}`).value) || 0;
+  const anticipo = parseFloat(document.getElementById(`anticipo${rowIndex}`).value) || 0;
+
+  await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"updateCotizacion",
+      rowIndex,
+      estatus:"En desarrollo",
+      precio,
+      anticipo
+    })
+  });
+
+  cargar();
 }
 
-async function guardarTicket(){
-  const descripcion = document.getElementById("descripcion").value;
+async function cambiarEstatus(rowIndex,estatus){
+  await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"updateCotizacion",
+      rowIndex,
+      estatus,
+      precio:0,
+      anticipo:0
+    })
+  });
+
+  cargar();
+}
+
+async function crearTicket(rowIndex){
+
+  const c = cotizaciones.find(x => x.rowIndex == rowIndex);
+
+  if(!c.Precio || c.Estatus=="Pendiente"){
+    alert("Primero define precio y aprueba la cotización");
+    return;
+  }
 
   await fetch(API_URL,{
     method:"POST",
     body:JSON.stringify({
       action:"saveTicket",
-      folio:currentFolio,
-      cliente:currentCliente,
-      estatus:"Abierto",
-      descripcion:descripcion
+      folio:c.Folio,
+      cliente:c.Cliente,
+      telefono:c.Telefono,
+      producto:c.Producto,
+      fechaEntrega:c.FechaEntrega,
+      precio:c.Precio,
+      anticipo:c.Anticipo,
+      estatus:c.Estatus
     })
   });
 
-  alert("Ticket guardado");
-  document.getElementById("editor").style.display="none";
+  alert("Ticket generado");
 }
 
-document.getElementById("filter").addEventListener("change",render);
+async function eliminar(folio){
+  if(!confirm("¿Eliminar cotización y ticket vinculado?")) return;
 
-cargarCotizaciones();
+  await fetch(API_URL,{
+    method:"POST",
+    body:JSON.stringify({
+      action:"deleteCotizacion",
+      folio
+    })
+  });
+
+  cargar();
+}
+
+cargar();
 </script>
 
 </body>
