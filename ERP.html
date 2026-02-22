@@ -64,6 +64,7 @@ margin-bottom:16px;
 
 button{
 margin-top:8px;
+margin-right:6px;
 padding:8px 14px;
 border-radius:30px;
 border:none;
@@ -85,6 +86,13 @@ padding:8px;
 border-radius:12px;
 border:none;
 }
+.ticketBox{
+margin-top:8px;
+background:#111;
+padding:8px;
+border-radius:10px;
+font-size:12px;
+}
 </style>
 </head>
 
@@ -93,7 +101,6 @@ border:none;
 <h1>Panel Cotizaciones</h1>
 
 <div class="topbar" id="filtros"></div>
-
 <div id="lista"></div>
 
 <script>
@@ -124,6 +131,7 @@ cotizaciones
 .forEach(c=>{
 
 const relacionados=tickets.filter(t=>t.Folio===c.Folio);
+const puedeCrear=["Pendiente","En Desarrollo","Aprobadas"].includes(c.Estatus);
 
 const card=document.createElement("div");
 card.className="card";
@@ -135,7 +143,7 @@ card.innerHTML=`
 <select onchange="updateCot(${c.rowIndex},this.value)">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
 <option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
-<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
+<option ${c.Estatus==="Aprobadas"?"selected":""}>Aprobadas</option>
 <option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
@@ -144,21 +152,29 @@ card.innerHTML=`
 value="${c.Precio||""}"
 onchange="guardarPrecio(${c.rowIndex},this.value)">
 
-<button onclick="crearTicket('${c.Folio}')">
-Nuevo Ticket
-</button>
+${puedeCrear ? `<button onclick="crearTicket('${c.Folio}')">Nuevo Ticket</button>` : ``}
 
-${relacionados.map((t,i)=>`
-<div style="margin-top:8px;background:#111;padding:8px;border-radius:10px;">
+<button onclick="verCotizacion('${c.Folio}')">Ver Cotización</button>
+<button onclick="verTickets('${c.Folio}')">Ver Tickets</button>
+
+${relacionados.map((t,i)=>{
+
+const textoAnticipo=
+Number(t["Saldo pendiente"])===0
+? "Pago"
+: "Anticipo";
+
+return `
+<div class="ticketBox">
 Ticket ${String.fromCharCode(65+i)} —
-Anticipo: ${t.Anticipo} —
+${textoAnticipo}: ${t.Anticipo} —
 Saldo: ${t["Saldo pendiente"]}
 </div>
-`).join("")}
+`;
 
-<button class="delete" onclick="eliminar('${c.Folio}')">
-Eliminar
-</button>
+}).join("")}
+
+<button class="delete" onclick="eliminar('${c.Folio}')">Eliminar</button>
 `;
 
 lista.appendChild(card);
@@ -168,12 +184,13 @@ lista.appendChild(card);
 }
 
 function renderFiltros(){
-const estados=["Todos","Pendiente","En Desarrollo","Aprobada","Entregada","Cancelada"];
 
+const estados=["Todos","Pendiente","En Desarrollo","Aprobadas","Entregada","Cancelada"];
 const contadores={};
 estados.forEach(e=>contadores[e]=0);
 
 cotizaciones.forEach(c=>{
+contadores["Todos"]++;
 if(contadores[c.Estatus]!==undefined)
 contadores[c.Estatus]++;
 });
@@ -216,31 +233,101 @@ Precio:precio
 async function crearTicket(folio){
 
 const c=cotizaciones.find(x=>x.Folio===folio);
+const relacionados=tickets.filter(t=>t.Folio===folio);
 
 if(!c.Precio){
 alert("Define precio primero");
 return;
 }
 
-const anticipo=prompt("¿Cuánto pagó?");
-if(!anticipo)return;
+let montoTotal=Number(c.Precio);
 
+// Ticket A
+if(relacionados.length===0){
+
+const tipo=prompt("1 = Anticipo\n2 = Pago completo");
+if(!tipo) return;
+
+let anticipo=0;
+
+if(tipo==="1"){
+anticipo=Number(prompt("Monto del anticipo:"));
+if(!anticipo) return;
+}
+
+if(tipo==="2"){
+anticipo=montoTotal;
+}
+
+await guardarTicketBackend(c,anticipo,montoTotal);
+alert("Ticket A generado");
+}
+
+// Ticket B
+else{
+
+const ticketA=relacionados[0];
+const saldoPendiente=Number(ticketA["Saldo pendiente"]);
+
+if(saldoPendiente<=0){
+alert("Ya está liquidado");
+return;
+}
+
+await guardarTicketBackend(c,saldoPendiente,saldoPendiente);
+alert("Ticket B generado");
+}
+
+cargar();
+}
+
+async function guardarTicketBackend(c,anticipo,precio){
 await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({
 action:"saveTicket",
 ...c,
 Anticipo:Number(anticipo),
-Precio:Number(c.Precio)
+Precio:Number(precio)
 })
 });
+}
 
-cargar();
+function verCotizacion(folio){
+const c=cotizaciones.find(x=>x.Folio===folio);
+alert(`
+Folio: ${c.Folio}
+Cliente: ${c.Cliente}
+Tamaño: ${c.Tamaño}
+Diseño: ${c.Diseño}
+Evento: ${c.Evento}
+Entrega: ${c["Fecha de entrega"]}
+Teléfono: ${c["Teléfono"]}
+Precio: ${c.Precio}
+Estatus: ${c.Estatus}
+`);
+}
+
+function verTickets(folio){
+const relacionados=tickets.filter(t=>t.Folio===folio);
+if(relacionados.length===0){
+alert("Sin tickets");
+return;
+}
+let texto="";
+relacionados.forEach((t,i)=>{
+texto+=`
+Ticket ${String.fromCharCode(65+i)}
+Anticipo: ${t.Anticipo}
+Saldo: ${t["Saldo pendiente"]}
+
+`;
+});
+alert(texto);
 }
 
 async function eliminar(folio){
 if(!confirm("Eliminar cotización y todos sus tickets?"))return;
-
 await fetch(API_URL,{
 method:"POST",
 body:JSON.stringify({
@@ -248,7 +335,6 @@ action:"deleteCotizacion",
 folio
 })
 });
-
 cargar();
 }
 
