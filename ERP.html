@@ -3,113 +3,176 @@
 <head>
   <base target="_top">
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800;900&display=swap" rel="stylesheet">
 
   <style>
     body{
       margin:0;
-      font-family: Arial, sans-serif;
-      background:#111;
+      font-family:'Montserrat',sans-serif;
+      background:#0f0f0f;
       color:white;
     }
 
     header{
-      padding:20px;
+      padding:18px;
       font-weight:900;
-      font-size:22px;
+      font-size:18px;
+      text-align:center;
       background:linear-gradient(135deg,#ff4fa6,#ffd84f);
       color:black;
-      text-align:center;
     }
 
-    .filters{
+    .tabs{
       display:flex;
-      justify-content:center;
-      gap:10px;
-      padding:15px;
+      position:fixed;
+      bottom:0;
+      width:100%;
+      background:#1c1c1c;
+      border-top:1px solid #222;
     }
 
-    .filter-btn{
-      padding:8px 14px;
-      border-radius:999px;
-      border:none;
+    .tab{
+      flex:1;
+      text-align:center;
+      padding:14px;
       font-weight:700;
       cursor:pointer;
     }
 
-    .cards{
-      padding:20px;
-      display:grid;
-      gap:15px;
-      max-width:900px;
-      margin:auto;
+    .tab.active{
+      background:#ffd84f;
+      color:black;
+    }
+
+    .view{
+      display:none;
+      padding:15px;
+      padding-bottom:80px;
+    }
+
+    .view.active{
+      display:block;
     }
 
     .card{
-      background:#1c1c1c;
-      padding:15px;
-      border-radius:12px;
-    }
-
-    .generate{
-      margin-top:10px;
-      background:#ffd84f;
-      color:black;
-      font-weight:900;
-      border:none;
-      padding:8px 12px;
-      border-radius:6px;
+      background:#1f1f1f;
+      padding:14px;
+      border-radius:14px;
+      margin-bottom:12px;
+      font-size:14px;
       cursor:pointer;
     }
 
-    .modal{
-      position:fixed;
-      inset:0;
-      background:rgba(0,0,0,.8);
-      display:none;
-      justify-content:center;
-      align-items:center;
-    }
-
-    .modal-content{
-      background:white;
-      color:black;
-      padding:20px;
-      border-radius:12px;
-      width:350px;
+    .card b{
+      font-size:15px;
     }
 
     input{
       width:100%;
-      padding:8px;
+      padding:12px;
+      margin-bottom:12px;
+      border-radius:10px;
+      border:none;
+      font-size:14px;
+    }
+
+    .btn{
+      width:100%;
+      padding:14px;
+      border-radius:12px;
+      border:none;
+      font-weight:900;
+      font-size:14px;
+      margin-bottom:12px;
+      cursor:pointer;
+    }
+
+    .btn-primary{
+      background:#ffd84f;
+      color:black;
+    }
+
+    .btn-secondary{
+      background:#333;
+      color:white;
+    }
+
+    .ticket-preview{
+      background:white;
+      color:black;
+      padding:20px;
+      border-radius:12px;
+      font-size:13px;
+      margin-top:10px;
+      box-shadow:0 0 20px rgba(0,0,0,.5);
+    }
+
+    .ticket-title{
+      text-align:center;
+      font-weight:900;
       margin-bottom:10px;
+      font-size:16px;
     }
 
   </style>
 </head>
 <body>
 
-<header>ADMIN — PIÑATA COLADA</header>
+<header>PIÑATA COLADA — ADMIN</header>
 
-<div class="filters">
-  <button onclick="filtrar('PENDIENTE')">Pendiente</button>
-  <button onclick="filtrar('EN DESARROLLO')">En desarrollo</button>
-  <button onclick="filtrar('FINALIZADA')">Finalizada</button>
-  <button onclick="render(cotizaciones)">Todos</button>
+<!-- =========================
+     VISTA COTIZACIONES
+========================= -->
+
+<div class="view active" id="cotizacionesView">
+  <h3>Cotizaciones</h3>
+  <div id="cotizaciones"></div>
 </div>
 
-<div class="cards" id="cards"></div>
+<!-- =========================
+     VISTA TICKETS
+========================= -->
 
-<!-- MODAL -->
-<div class="modal" id="modal">
-  <div class="modal-content">
-    <h3>Generar Ticket</h3>
+<div class="view" id="ticketsView">
+  <h3>Tickets</h3>
+  <div id="tickets"></div>
+</div>
 
-    <input type="number" id="precio" placeholder="Precio cotizado">
-    <input type="number" id="anticipo" placeholder="Anticipo">
+<!-- =========================
+     VISTA EDITOR
+========================= -->
 
-    <button onclick="guardar()">Guardar Ticket</button>
-    <button onclick="cerrar()">Cancelar</button>
-  </div>
+<div class="view" id="editorView">
+  <h3>Editor Ticket</h3>
+
+  <button class="btn btn-secondary" onclick="nuevoTicket()">Nuevo Ticket</button>
+
+  <input id="folio" placeholder="Folio">
+  <input id="cliente" placeholder="Cliente">
+  <input id="tamano" placeholder="Tamaño">
+  <input id="diseno" placeholder="Diseño">
+  <input id="fechaEntrega" placeholder="Fecha de entrega">
+  <input id="telefono" placeholder="Teléfono">
+  <input id="precio" placeholder="Precio cotizado">
+  <input id="anticipo" placeholder="Anticipo">
+  <input id="saldo" placeholder="Saldo pendiente">
+
+  <button class="btn btn-primary" onclick="guardar()">Guardar Ticket</button>
+
+  <div class="ticket-preview" id="preview"></div>
+
+</div>
+
+<!-- =========================
+     TABS
+========================= -->
+
+<div class="tabs">
+  <div class="tab active" onclick="cambiarVista('cotizacionesView',this)">Cotizaciones</div>
+  <div class="tab" onclick="cambiarVista('ticketsView',this)">Tickets</div>
+  <div class="tab" onclick="cambiarVista('editorView',this)">Editor</div>
 </div>
 
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
@@ -117,117 +180,141 @@
 <script>
 
 let cotizaciones = [];
-let seleccionActual = null;
+let tickets = [];
 
-google.script.run.withSuccessHandler(data => {
+/* =========================
+   CAMBIO DE VISTA
+========================= */
+
+function cambiarVista(id,el){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  document.querySelectorAll(".tab").forEach(t=>t.classList.remove("active"));
+  document.getElementById(id).classList.add("active");
+  el.classList.add("active");
+}
+
+/* =========================
+   CARGAR DATA
+========================= */
+
+google.script.run.withSuccessHandler(data=>{
   cotizaciones = data;
-  render(data);
+  renderCotizaciones();
 }).obtenerCotizaciones();
 
-function render(data){
-  const container = document.getElementById("cards");
-  container.innerHTML = "";
+google.script.run.withSuccessHandler(data=>{
+  tickets = data;
+  renderTickets();
+}).obtenerTickets();
 
-  data.forEach(c => {
+/* =========================
+   RENDER
+========================= */
 
-    container.innerHTML += `
-      <div class="card">
+function renderCotizaciones(){
+  const container = document.getElementById("cotizaciones");
+  container.innerHTML="";
+  cotizaciones.forEach(c=>{
+    container.innerHTML+=`
+      <div class="card" onclick='cargarDesdeCotizacion(${JSON.stringify(c)}); cambiarVista("editorView", document.querySelectorAll(".tab")[2]);'>
         <b>${c.Folio}</b><br>
         ${c.Cliente}<br>
-        ${c["Fecha entrega"] || ""}<br>
-        ESTATUS: ${c.Estatus}<br>
-
-        <button class="generate"
-          onclick='abrirModal(${JSON.stringify(c)})'>
-          Generar Ticket
-        </button>
+        ${c.Estatus || ""}
       </div>
     `;
   });
 }
 
-function filtrar(estatus){
-  render(cotizaciones.filter(c => c.Estatus === estatus));
+function renderTickets(){
+  const container=document.getElementById("tickets");
+  container.innerHTML="";
+  tickets.forEach(t=>{
+    container.innerHTML+=`
+      <div class="card" onclick='cargarTicket(${JSON.stringify(t)}); cambiarVista("editorView", document.querySelectorAll(".tab")[2]);'>
+        <b>${t.Folio}</b><br>
+        ${t.Cliente}
+      </div>
+    `;
+  });
 }
 
-function abrirModal(data){
-  seleccionActual = data;
-  document.getElementById("modal").style.display="flex";
+/* =========================
+   ACCIONES
+========================= */
+
+function cargarDesdeCotizacion(c){
+  folio.value=c.Folio;
+  cliente.value=c.Cliente;
+  tamano.value=c.Tamaño;
+  diseno.value=c.Diseño;
+  fechaEntrega.value=c["Fecha de entrega"];
+  telefono.value=c.Teléfono;
+  actualizarPreview();
 }
 
-function cerrar(){
-  document.getElementById("modal").style.display="none";
+function cargarTicket(t){
+  folio.value=t.Folio;
+  cliente.value=t.Cliente;
+  tamano.value=t.Tamaño;
+  diseno.value=t.Diseño;
+  fechaEntrega.value=t["Fecha de entrega"];
+  telefono.value=t.Teléfono;
+  precio.value=t["Precio cotizado"];
+  anticipo.value=t.Anticipo;
+  saldo.value=t["Saldo pendiente"];
+  actualizarPreview();
+}
+
+function nuevoTicket(){
+  document.querySelectorAll("input").forEach(i=>i.value="");
+  actualizarPreview();
+}
+
+document.querySelectorAll("input").forEach(i=>{
+  i.addEventListener("input",actualizarPreview);
+});
+
+function actualizarPreview(){
+  preview.innerHTML=`
+    <div class="ticket-title">PIÑATA COLADA</div>
+    Folio: ${folio.value}<br>
+    Cliente: ${cliente.value}<br>
+    Tamaño: ${tamano.value}<br>
+    Diseño: ${diseno.value}<br>
+    Entrega: ${fechaEntrega.value}<br>
+    Tel: ${telefono.value}<br>
+    Precio: $${precio.value}<br>
+    Anticipo: $${anticipo.value}<br>
+    Saldo: $${saldo.value}
+  `;
 }
 
 function guardar(){
 
-  const precio = Number(document.getElementById("precio").value);
-  const anticipo = Number(document.getElementById("anticipo").value);
-  const saldo = precio - anticipo;
-
-  const ticket = {
-    folio: seleccionActual.Folio,
-    fechaSolicitud: seleccionActual["Fecha registro"],
-    cliente: seleccionActual.Cliente,
-    tamano: seleccionActual.Tamaño,
-    diseno: seleccionActual.Diseño,
-    fechaEntrega: seleccionActual["Fecha entrega"],
-    evento: seleccionActual.Evento,
-    telefono: seleccionActual.Teléfono,
-    precio: precio,
-    anticipo: anticipo,
-    saldo: saldo,
-    metodoPago: seleccionActual["Método pago"],
-    entrega: seleccionActual.Entrega
+  const ticket={
+    folio:folio.value,
+    fechaSolicitud:new Date(),
+    cliente:cliente.value,
+    tamano:tamano.value,
+    diseno:diseno.value,
+    fechaEntrega:fechaEntrega.value,
+    evento:"",
+    telefono:telefono.value,
+    precio:precio.value,
+    anticipo:anticipo.value,
+    saldo:saldo.value,
+    metodoPago:"",
+    entrega:""
   };
 
   google.script.run.guardarTicket(ticket);
 
-  generarImagen(ticket);
-
-  cerrar();
-}
-
-function generarImagen(ticket){
-
-  const div = document.createElement("div");
-  div.innerHTML = `
-    <div id="ticket" style="
-      width:400px;
-      padding:20px;
-      background:white;
-      color:black;
-      font-family:monospace;
-    ">
-      <h2 style="text-align:center">PIÑATA COLADA</h2>
-      <hr>
-      Cliente: ${ticket.cliente}<br>
-      Tamaño: ${ticket.tamano}<br>
-      Diseño: ${ticket.diseno}<br>
-      Precio: $${ticket.precio}<br>
-      Anticipo: $${ticket.anticipo}<br>
-      Saldo: $${ticket.saldo}<br>
-      <hr>
-      Gracias por tu compra
-    </div>
-  `;
-
-  document.body.appendChild(div);
-
-  html2canvas(document.getElementById("ticket"))
-  .then(canvas => {
-
-    const base64 = canvas.toDataURL("image/png");
-
-    google.script.run.guardarTicketImagen(
-      base64,
-      "TICKET_" + ticket.folio + ".png"
-    );
-
-    alert("Ticket guardado en Drive y en hoja TICKETS");
-
-    div.remove();
+  html2canvas(document.getElementById("preview")).then(canvas=>{
+    const base64=canvas.toDataURL("image/png");
+    google.script.run.guardarTicketImagen(base64,ticket.folio);
   });
+
+  alert("Ticket guardado correctamente");
 }
 
 </script>
