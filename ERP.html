@@ -114,15 +114,28 @@ z-index:999;
 }
 
 .popup{
-background:white;
-color:#222;
+background:#f8f9fc;
+color:#1b1f2a;
 width:95%;
-max-width:800px;
+max-width:900px;
 max-height:90vh;
 overflow-y:auto;
-border-radius:16px;
-padding:25px;
+border-radius:20px;
+padding:30px;
+box-shadow:0 30px 80px rgba(0,0,0,.4);
+text-align:left;
+}
+
+.popup h2{
 text-align:center;
+margin-bottom:20px;
+}
+
+.popup label{
+font-weight:700;
+font-size:13px;
+display:block;
+margin-top:12px;
 }
 
 .popup input,
@@ -138,7 +151,7 @@ text-align:center;
 .close-btn{
 background:#dc3545;
 color:white;
-margin-bottom:10px;
+margin-top:15px;
 }
 
 /* ===============================
@@ -150,6 +163,28 @@ margin-bottom:10px;
 .admin-menu-btn{ display:block; }
 }
 
+@media print {
+  body * {
+    visibility: hidden;
+  }
+
+  .popup, .popup * {
+    visibility: visible;
+  }
+
+  .popup {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    box-shadow: none;
+  }
+
+  .close-btn, .btn-primary {
+    display: none;
+  }
+}
+   
 </style>
 </head>
 
@@ -171,12 +206,28 @@ margin-bottom:10px;
 
 <script>
 
-const API="https://script.google.com/macros/s/AKfycbzrUJuNsIxO47dL4p3-JZjXL4gR8GneQmRJczlZ1TmaaRTtnDkwsH7Ln7h5dsQQ5fKs/exec";
+const API="https://script.google.com/macros/s/AKfycbxbfuPfXY4BdGY0Xxu8o8uQKxrXl7o8I_QE7Oe6agng8RmEBkgWcQEW2nEBgRPvW0LA/exec";
 
 let cotizaciones=[];
 let tickets=[];
 let filtroActual="Todos";
 
+
+function formatDate(value){
+  if(!value) return "";
+
+  const d = new Date(value);
+  if(isNaN(d)) return "";
+
+  const year = d.getFullYear();
+  const month = String(d.getMonth()+1).padStart(2,'0');
+  const day = String(d.getDate()).padStart(2,'0');
+
+  return `${year}-${month}-${day}`;
+}
+
+
+   
 /* ===============================
    CARGAR
 ================================ */
@@ -252,6 +303,8 @@ lista.innerHTML+=`
 <button class="btn-ticket" onclick="crearTicket(${c.rowIndex})">Crear Ticket</button>
 <button class="btn-delete" onclick="eliminar('${c.Folio}')">Eliminar</button>
 
+${renderBotonesTickets(c.Folio)}
+
 </div>
 `;
 });
@@ -267,7 +320,10 @@ const c = cotizaciones.find(x=>x.rowIndex===row);
 if(!c) return;
 
 let html = `
-<h2>Editar Cotización Completa</h2>
+<h2>Editar Cotización</h2>
+<p style="text-align:center;color:#666;margin-top:-10px;">
+Modifica los campos necesarios y presiona "Guardar Todo"
+</p>
 
 <label>Folio (No editable)</label>
 <input value="${c.Folio}" disabled>
@@ -285,8 +341,10 @@ let html = `
 <input id="Diseño" value="${c.Diseño||""}">
 
 <label>Fecha de entrega</label>
-<input id="Fecha_de_entrega" value="${c["Fecha de entrega"]||""}">
-
+<input 
+  type="date" 
+  id="Fecha_de_entrega"
+  value="${formatDate(c["Fecha de entrega"])}">
 <label>Evento</label>
 <input id="Evento" value="${c.Evento||""}">
 
@@ -371,30 +429,30 @@ cargar();
 
 function crearTicket(row){
 
-const c=cotizaciones.find(x=>x.rowIndex===row);
+const c = cotizaciones.find(x=>x.rowIndex===row);
 
-const precio=parseFloat(c.Precio||0);
-const anticipo=parseFloat(c.Anticipo||0);
-const saldo=precio-anticipo;
+const precio = parseFloat(c.Precio||0);
+const anticipo = parseFloat(c.Anticipo||0);
+const saldo = precio - anticipo;
 
-let html=`
+let html = `
 <h2>Crear Ticket</h2>
 
-<p>Precio: $${precio}</p>
-<p>Anticipo: $${anticipo}</p>
-<p>Saldo: $${saldo}</p>
+<p><strong>Folio:</strong> ${c.Folio}</p>
+<p><strong>Cliente:</strong> ${c.Cliente}</p>
+<p><strong>Evento:</strong> ${c.Evento}</p>
 
-<label>Monto del Ticket</label>
-<input id="monto" type="number" value="${saldo}">
+<p><strong>Precio:</strong> $${precio}</p>
+<p><strong>Anticipo:</strong> $${anticipo}</p>
+<p><strong>Saldo Pendiente:</strong> $${saldo}</p>
 
-<select id="tipo">
-<option value="Unico">Pago Único</option>
-<option value="A">Ticket A</option>
-<option value="B">Ticket B</option>
-</select>
+<button class="btn-primary" onclick="guardarTicket(${row})">
+Guardar Ticket
+</button>
 
-<button class="btn-primary" onclick="guardarTicket(${row})">Crear</button>
-<button class="close-btn" onclick="cerrar()">Cerrar</button>
+<button class="close-btn" onclick="cerrar()">
+Cerrar
+</button>
 `;
 
 openPopup(html);
@@ -404,17 +462,22 @@ async function guardarTicket(row){
 
 const c = cotizaciones.find(x=>x.rowIndex===row);
 
-const tipo = document.getElementById("tipo").value;
-const monto = document.getElementById("monto").value;
-
 await fetch(API,{
 method:"POST",
 body:JSON.stringify({
 action:"crearTicket",
-rowIndex:row,
 Folio:c.Folio,
-Tipo:tipo,
-Monto:monto
+"Fecha de solicitud":c["Fecha de solicitud"],
+Cliente:c.Cliente,
+Tamaño:c.Tamaño,
+Diseño:c.Diseño,
+"Fecha de entrega":c["Fecha de entrega"],
+Evento:c.Evento,
+"Teléfono":c["Teléfono"],
+"Método de pago":c["Método de pago"],
+Entrega:c.Entrega,
+Precio:c.Precio,
+Anticipo:c.Anticipo
 })
 });
 
@@ -464,6 +527,71 @@ function toggleMenu(){
 document.getElementById("navbar").classList.toggle("show");
 }
 
+/* ===============================
+   VER TICKETS
+================================ */
+
+function renderBotonesTickets(folio){
+
+const relacionados = tickets.filter(t => t.Folio === folio);
+
+if(relacionados.length === 0) return "";
+
+let botones = "";
+
+relacionados.forEach((t,i)=>{
+  botones += `
+    <button class="btn-primary" onclick="verTicket(${t.rowIndex})">
+      Ver Ticket ${String.fromCharCode(65+i)}
+    </button>
+  `;
+});
+
+return botones;
+}
+
+
+function verTicket(row){
+
+const t = tickets.find(x => x.rowIndex === row);
+if(!t) return;
+
+let html = `
+<h2>🎟️ Ticket</h2>
+
+<p><strong>Folio:</strong> ${t.Folio}</p>
+<p><strong>Cliente:</strong> ${t.Cliente}</p>
+<p><strong>Evento:</strong> ${t.Evento}</p>
+
+<hr>
+
+<p><strong>Precio:</strong> $${t.Precio}</p>
+<p><strong>Anticipo:</strong> $${t.Anticipo}</p>
+<p><strong>Saldo Pendiente:</strong> $${t["Saldo pendiente"]}</p>
+
+<hr>
+
+<p><strong>Fecha de solicitud:</strong> ${t["Fecha de solicitud"]}</p>
+<p><strong>Fecha de entrega:</strong> ${t["Fecha de entrega"]}</p>
+<p><strong>Método de pago:</strong> ${t["Método de pago"]}</p>
+<p><strong>Entrega:</strong> ${t.Entrega}</p>
+
+<button class="btn-primary" onclick="imprimirTicket()">
+Imprimir
+</button>
+
+<button class="close-btn" onclick="cerrar()">
+Cerrar
+</button>
+`;
+
+openPopup(html);
+}
+
+function imprimirTicket(){
+  window.print();
+}
+   
 /* ===============================
    INICIAR
 ================================ */
