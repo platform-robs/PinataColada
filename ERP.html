@@ -135,7 +135,7 @@ card.innerHTML=`
 <select onchange="updateCot(${c.rowIndex},this.value)">
 <option ${c.Estatus==="Pendiente"?"selected":""}>Pendiente</option>
 <option ${c.Estatus==="En Desarrollo"?"selected":""}>En Desarrollo</option>
-<option ${c.Estatus==="Aprobadas"?"selected":""}>Aprobadas</option>
+<option ${c.Estatus==="Aprobada"?"selected":""}>Aprobada</option>
 <option ${c.Estatus==="Entregada"?"selected":""}>Entregada</option>
 <option ${c.Estatus==="Cancelada"?"selected":""}>Cancelada</option>
 </select>
@@ -168,7 +168,7 @@ lista.appendChild(card);
 }
 
 function renderFiltros(){
-const estados=["Todos","Pendiente","En Desarrollo","Aprobadas","Entregada","Cancelada"];
+const estados=["Todos","Pendiente","En Desarrollo","Aprobada","Entregada","Cancelada"];
 
 const contadores={};
 estados.forEach(e=>contadores[e]=0);
