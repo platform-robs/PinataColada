@@ -10,8 +10,9 @@
 <style>
 
 /* ===============================
-   CONFIGURACIÓN GENERAL
+   BASE
 ================================ */
+
 body{
 margin:0;
 font-family:'Montserrat',sans-serif;
@@ -23,24 +24,19 @@ background:
 color:white;
 }
 
-h1,h2,h3{
-margin:0 0 10px 0;
-}
+.container{ padding:30px; }
 
 button{
 cursor:pointer;
 border:none;
-border-radius:12px;
+border-radius:999px;
 padding:8px 14px;
-font-weight:600;
+font-weight:700;
 }
 
 /* ===============================
-   NAVBAR
+   NAV
 ================================ */
-.admin-header{
-margin-bottom:25px;
-}
 
 .admin-nav{
 display:flex;
@@ -51,31 +47,19 @@ padding:15px 20px;
 border-radius:20px;
 }
 
-.admin-brand{
-font-weight:900;
-font-size:18px;
-}
-
 .admin-links{
 display:flex;
 gap:10px;
 }
 
 .admin-links button{
-  background: rgba(255,255,255,.05);
-  border-radius: 999px;
-  padding: 8px 12px;
-  font-weight:700;
-  transition:.2s;
-}
-
-.admin-links button:hover{
-color:#ff4fa6;
+background:rgba(255,255,255,.05);
+color:white;
 }
 
 .admin-menu-btn{
 display:none;
-background:none;
+background:rgba(255,255,255,.05);
 color:white;
 font-size:22px;
 }
@@ -90,50 +74,35 @@ padding:15px;
 border-radius:20px;
 }
 
-@media(max-width:768px){
-.admin-links{display:none;}
-.admin-menu-btn{display:block;}
+.admin-mobile-menu button{
+background:rgba(255,255,255,.05);
+color:white;
 }
 
-   .admin-mobile-menu button{
-  background: rgba(255,255,255,.05);
-  color:white;
-  border-radius:999px;
-  padding:10px 14px;
-  font-weight:700;
-  transition:.2s;
-}
-
-.admin-mobile-menu button:hover{
-  background: rgba(255,255,255,.10);
-}
 /* ===============================
-   CONTENIDO
+   CARDS
 ================================ */
-.container{
-padding:30px;
-}
 
 .card{
-background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.02));
-border: 1px solid rgba(255,255,255,.08);
+background:linear-gradient(180deg,rgba(255,255,255,.05),rgba(255,255,255,.02));
+border:1px solid rgba(255,255,255,.08);
 padding:20px;
 border-radius:20px;
 margin-bottom:20px;
-box-shadow:0 0 15px rgba(0,0,0,.4);
 }
 
-.card h3{
-font-size:18px;
-}
+.card-buttons{ display:flex; gap:8px; flex-wrap:wrap; margin-top:15px; }
+
+/* ===============================
+   BADGES
+================================ */
 
 .badge{
 padding:5px 10px;
 border-radius:20px;
 font-size:12px;
-font-weight:700;
+font-weight:800;
 }
-
 
 .badge-Pendiente{ background:#ffc107; color:black; }
 .badge-EnDesarrollo{ background:#17a2b8; }
@@ -141,22 +110,13 @@ font-weight:700;
 .badge-Entregada{ background:#6f42c1; }
 .badge-Cancelada{ background:#dc3545; }
 
-.card-buttons{
-display:flex;
-flex-wrap:wrap;
-gap:8px;
-margin-top:15px;
-}
-
 /* ===============================
    POPUP
 ================================ */
+
 .popup-overlay{
 position:fixed;
-top:0;
-left:0;
-width:100%;
-height:100%;
+inset:0;
 background:rgba(0,0,0,.8);
 display:flex;
 justify-content:center;
@@ -165,8 +125,8 @@ z-index:999;
 }
 
 .popup{
-background: linear-gradient(180deg, rgba(255,255,255,.06), rgba(255,255,255,.02));
-border: 1px solid rgba(255,255,255,.10);
+background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+border:1px solid rgba(255,255,255,.10);
 width:95%;
 max-width:700px;
 max-height:90vh;
@@ -175,55 +135,19 @@ border-radius:20px;
 padding:25px;
 }
 
-.popup h2{
-margin-bottom:15px;
-}
-
-.popup-section{
-margin-bottom:20px;
-padding-bottom:10px;
-border-bottom:1px solid rgba(255,255,255,.1);
-}
-
-.popup-section p{
-margin:6px 0;
-}
-
-.popup form{
-display:flex;
-flex-direction:column;
-gap:8px;
-}
-
-.popup input,.popup textarea{
-padding:8px;
-border-radius:10px;
-border:none;
-background:#2b2b35;
-color:white;
-}
-
 .close-btn{
 background:#dc3545;
 margin-bottom:15px;
 }
 
-.save-btn{
-background:#28a745;
-margin-top:10px;
-}
+/* ===============================
+   RESPONSIVE
+================================ */
 
-.info-note{
-font-size:12px;
-opacity:.7;
-margin-top:5px;
+@media(max-width:768px){
+.admin-links{ display:none; }
+.admin-menu-btn{ display:block; }
 }
-
-   .status-Pendiente{ border:1px solid #ffc107; }
-.status-EnDesarrollo{ border:1px solid #17a2b8; }
-.status-Aprobadas{ border:1px solid #28a745; }
-.status-Entregada{ border:1px solid #6f42c1; }
-.status-Cancelada{ border:1px solid #dc3545; }
 
 </style>
 </head>
@@ -232,95 +156,60 @@ margin-top:5px;
 
 <div class="container">
 
-<!-- ===============================
-     NAVBAR
-================================ -->
-<header class="admin-header">
-  <div class="admin-nav">
-    <div class="admin-brand">
-      Panel Administrativo — Piñata Colada
-    </div>
+<header class="admin-nav">
+  <div style="font-weight:900;">Panel — Piñata Colada</div>
 
-    <nav class="admin-links">
-      <button onclick="setFiltro('Todos')">Todos</button>
-      <button onclick="setFiltro('Pendiente')">Pendiente</button>
-      <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
-      <button onclick="setFiltro('Aprobadas')">Aprobadas</button>
-      <button onclick="setFiltro('Entregada')">Entregada</button>
-      <button onclick="setFiltro('Cancelada')">Cancelada</button>
-    </nav>
+  <nav class="admin-links">
+    <button onclick="setFiltro('Todos')">Todos</button>
+    <button onclick="setFiltro('Pendiente')">Pendiente</button>
+    <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
+    <button onclick="setFiltro('Aprobadas')">Aprobadas</button>
+    <button onclick="setFiltro('Entregada')">Entregada</button>
+    <button onclick="setFiltro('Cancelada')">Cancelada</button>
+  </nav>
 
-    <button class="admin-menu-btn" onclick="toggleAdminMenu()">☰</button>
-  </div>
-
-  <div class="admin-mobile-menu" id="adminMobileMenu">
-      <button onclick="setFiltro('Todos')">Todos</button>
-      <button onclick="setFiltro('Pendiente')">Pendiente</button>
-      <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
-      <button onclick="setFiltro('Aprobadas')">Aprobadas</button>
-      <button onclick="setFiltro('Entregada')">Entregada</button>
-      <button onclick="setFiltro('Cancelada')">Cancelada</button>
-  </div>
+  <button class="admin-menu-btn" onclick="toggleAdminMenu()">☰</button>
 </header>
 
-<!-- ===============================
-     LISTADO
-================================ -->
+<div class="admin-mobile-menu" id="adminMobileMenu">
+  <button onclick="setFiltro('Todos')">Todos</button>
+  <button onclick="setFiltro('Pendiente')">Pendiente</button>
+  <button onclick="setFiltro('En Desarrollo')">En Desarrollo</button>
+  <button onclick="setFiltro('Aprobadas')">Aprobadas</button>
+  <button onclick="setFiltro('Entregada')">Entregada</button>
+  <button onclick="setFiltro('Cancelada')">Cancelada</button>
+</div>
+
 <div id="lista"></div>
 
 </div>
 
-<!-- ===============================
-     SCRIPT
-================================ -->
 <script>
 
-const API="https://script.google.com/macros/s/AKfycbzrUJuNsIxO47dL4p3-JZjXL4gR8GneQmRJczlZ1TmaaRTtnDkwsH7Ln7h5dsQQ5fKs/exec";
+const API="TU_URL_DE_APPS_SCRIPT";
 
 let cotizaciones=[];
-let tickets=[];
 let filtroActual="Todos";
-
-/* ===============================
-   UTILIDADES
-================================ */
-function formatFecha(fecha){
-if(!fecha) return "-";
-const f=new Date(fecha);
-return f.toLocaleDateString("es-MX",{year:"numeric",month:"long",day:"numeric"});
-}
 
 function toggleAdminMenu(){
 const menu=document.getElementById("adminMobileMenu");
-menu.style.display=menu.style.display==="flex"?"none":"flex";
+menu.style.display = menu.style.display==="flex"?"none":"flex";
 }
 
 function setFiltro(valor){
-  filtroActual = valor;
-
-  // Cerrar menú móvil si está abierto
-  const menu = document.getElementById("adminMobileMenu");
-  menu.style.display = "none";
-
-  render();
+filtroActual=valor;
+document.getElementById("adminMobileMenu").style.display="none";
+render();
 }
 
-/* ===============================
-   CARGAR DATOS
-================================ */
 async function cargar(){
 const res=await fetch(API+"?action=getAll");
 const data=await res.json();
 cotizaciones=data.cotizaciones||[];
-tickets=data.tickets||[];
 render();
 }
 
-/* ===============================
-   RENDER PRINCIPAL
-================================ */
 function render(){
-
 const lista=document.getElementById("lista");
 lista.innerHTML="";
 
@@ -328,48 +217,35 @@ cotizaciones
 .filter(c=>filtroActual==="Todos"||c.Estatus===filtroActual)
 .forEach(c=>{
 
-const relacionados=tickets.filter(t=>t.Folio===c.Folio);
-
-let botonesTickets="";
-
-if(relacionados.length===0){
-botonesTickets=`<button onclick="crearTicket('${c.Folio}')">Crear Ticket</button>`;
-}else{
-botonesTickets=relacionados.map((t,i)=>`
-<button onclick="verTicket(${t.rowIndex})">
-Ver Ticket ${String.fromCharCode(65+i)}
-</button>`).join("");
-}
-
 lista.innerHTML+=`
 <div class="card">
 <h3>${c.Folio} — ${c.Cliente}</h3>
-<p><strong>Evento:</strong> ${c.Evento}</p>
-<p><strong>Entrega:</strong> ${formatFecha(c["Fecha de entrega"])}</p>
-<p><strong>Precio:</strong> $${c.Precio||0}</p>
-<p><strong>Estatus:</strong> <span class="badge badge-${c.Estatus.replace(/\s/g,'')}">${c.Estatus}</span></p>
+<p><strong>Estatus:</strong>
+<span class="badge badge-${c.Estatus.replace(/\s/g,'')}">
+${c.Estatus}
+</span>
+</p>
 
 <div class="card-buttons">
 <button onclick="verCotizacion('${c.Folio}')">Ver Cotización</button>
-${botonesTickets}
 </div>
+
 </div>
 `;
 });
-
 }
 
-/* ===============================
-   POPUP BASE
-================================ */
+function verCotizacion(folio){
+openPopup("Cotización "+folio,"<p>Contenido aquí...</p>");
+}
+
 function openPopup(titulo,contenido){
 document.body.insertAdjacentHTML("beforeend",`
 <div class="popup-overlay" onclick="cerrarPopup(event)">
 <div class="popup" onclick="event.stopPropagation()">
 
 <div style="text-align:center;margin-bottom:15px;">
-  <img src="URL_DE_TU_LOGO" 
-       style="max-height:60px;">
+<img src="URL_DE_TU_LOGO" style="max-height:60px;">
 </div>
 
 <button class="close-btn" onclick="cerrarPopup()">Cerrar</button>
@@ -387,9 +263,6 @@ document.querySelector(".popup-overlay")?.remove();
 }
 }
 
-/* ===============================
-   INICIAR
-================================ */
 cargar();
 
 </script>
